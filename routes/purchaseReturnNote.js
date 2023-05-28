@@ -143,7 +143,7 @@ console.log(invData);
 // add new invoiceTxn
 
 
-dbquery = "INSERT INTO invoiceTxn (companyID, suppCustID, suppCustName, txnType, invType, documentNo, jvInit, voucherNo, invoiceNo, txnDate, txnParticular, invoiceTotal, discountTotal, taxID, taxRate, taxTotal, drAmt, crAmt, date_created) VALUE('" + companyID + "', '"+ supplierID + "', '"+ supplierName + "', '"+ txnType + "', '"+ invType + "', '"+documentNo+"', '"+jvInit+"', '"+voucherNo+"', '"+invoiceNo+"', '"+txnDate+"', '"+txnParticular+"', '"+txnAmount+"', '0.00', '"+taxID+"', '"+taxRate+"', '"+taxTotal+"', '"+drAmt+"',  '"+crAmt+"', CURDATE())"
+dbquery = "INSERT INTO invoiceTxn (companyID, suppCustID, suppCustName, txnType, invType, pur_sal, documentNo, jvInit, voucherNo, invoiceNo, txnDate, txnParticular, invoiceTotal, discountTotal, taxID, taxRate, taxTotal, drAmt, crAmt, date_created) VALUE('" + companyID + "', '"+ supplierID + "', '"+ supplierName + "', '"+ txnType + "', '"+ invType + "', 'P', '"+documentNo+"', '"+jvInit+"', '"+voucherNo+"', '"+invoiceNo+"', '"+txnDate+"', '"+txnParticular+"', '"+txnAmount+"', '0.00', '"+taxID+"', '"+taxRate+"', '"+taxTotal+"', '"+drAmt+"',  '"+crAmt+"', CURDATE())"
 
 console.log(dbquery);
 

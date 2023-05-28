@@ -60,9 +60,10 @@ var txnType = 'PAYMENT';
 var txnParticular = '';
 var documentType= 'PPY';
 var txnParticular = invData[0].paymentParticular;
-
+var receiptNo = invData[0].receiptNo;
 
 console.log(invData);
+
    //  console.log(req.body.password+req.body.adminName+req.body.companyID+ " "+ md5Password);
     var dbquery = ''
 
@@ -95,13 +96,13 @@ console.log(invData);
    invoiceNo = invData[i].invoiceNo;//
   // documentNo = invData[i].documentNo;
 //   taxDescription = invData[i].taxDescription;//
-//   txnDescription = invData[i].txnParticular;
+   txnParticular = invData[i].paymentParticular;
    txnAmount = parseFloat(invData[i].payAmount);
    drAmt = 0.00;
    crAmt = parseFloat(invData[i].payAmount);
    taxTotal = 0.00;
    noteTaxTotal += 0.00;
-   netTotal = invData[i].payAmount;
+   netTotal = crAmt; //invData[i].payAmount;
    txnTotal+=txnAmount;
    txnTaxTotal+=txnTotal;
    txnNetTotal+=netTotal;
@@ -138,9 +139,9 @@ console.log(invData);
    drAmt = netTotal;
    crAmr = 0;
 */
+//return alert("update payment")
 
-
-dbquery = "INSERT INTO invoiceTxn (companyID, suppCustID, suppCustName, txnType, invType, documentNo, jvInit, voucherNo, invoiceNo, txnDate, txnParticular, invoiceTotal, discountTotal, taxID, taxRate, taxTotal, drAmt, crAmt, date_created) VALUE('" + companyID + "', '"+ supplierID + "', '"+ supplierName + "', '"+ txnType + "', '"+ invType + "', '"+documentNo+"', '"+jvInit+"', '"+voucherNo+"', '"+invoiceNo+"', '"+txnDate+"', '"+txnParticular+"', '"+txnAmount+"', '0.00', '', '0', '"+taxTotal+"', '"+drAmt+"',  '"+crAmt+"', CURDATE())"
+dbquery = "INSERT INTO invoiceTxn (companyID, suppCustID, suppCustName, txnType, invType, pur_sal, documentNo, receiptNo, jvInit, voucherNo, invoiceNo, txnDate, txnParticular, invoiceTotal, discountTotal, taxID, taxRate, taxTotal, drAmt, crAmt, date_created) VALUE('" + companyID + "', '"+ supplierID + "', '"+ supplierName + "', '"+ txnType + "', '"+ invType + "', 'P', '"+documentNo+"', '"+receiptNo+"', '"+jvInit+"', '"+voucherNo+"', '"+invoiceNo+"', '"+txnDate+"', '"+txnParticular+"', '"+txnAmount+"', '0.00', '', '0', '"+taxTotal+"', '"+drAmt+"',  '"+crAmt+"', CURDATE())"
 
 console.log(dbquery);
 

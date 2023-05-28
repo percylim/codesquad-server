@@ -57,6 +57,9 @@ var purchasePaymentRouter = require('./routes/purchasePayment');
 var salesInvoiceRouter = require('./routes/salesInvoice');
 var salesNoteRouter = require('./routes/salesNote');
 var salesReturnNoteRouter = require('./routes/salesReturnNote');
+var salesPaymentRouter = require('./routes/salesPayment');
+
+
 
 // upload = multer({dest: 'uploads/'});
 // var homeRouter = require("./routes/sidebar");
@@ -155,7 +158,7 @@ app.use("/purchaseReturnNote", purchaseReturnNoteRouter);
 app.use("/purchasePayment", purchasePaymentRouter);
 app.use("/salesInvoice", salesInvoiceRouter);
 app.use("/salesReturnNote", salesReturnNoteRouter);
-
+app.use("/salesPayment", salesPaymentRouter);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -1135,6 +1138,48 @@ app.get("/glSelectList", function(req, res, next) {
 
           });
           });
+
+          app.get("/glMultiSelectList", function(req, res, next) {
+                    var companyID = req.query.companyID;
+                    var glType = req.query.gType;
+                    var glType1 = req.query.gType1;
+                    var db = mysql.createConnection({
+                    host: process.env.DB_HOST,
+                    user: process.env.DB_USER,
+                    password: process.env.DB_PASSWORD,
+                    database: process.env.DB_NAME,
+                    timezone : "+00:00",
+                  });  // ale/  var userLevel = req.query.userLevel;
+                    console.log(companyID);
+                    console.log(process.env.DB_HOST);
+                    console.log(process.env.DB_USER);
+                    console.log(process.env.DB_PASSWORD);
+                    console.log(process.env.DB_NAME);
+                    //console.log('req.body here -> ', categoryID);
+                    var sql="SELECT * from glAccount where companyID = '"+companyID+"' and (glType= '"+glType+"' OR glType = '"+glType1+"') order by glNo";
+                      // console.log(req.beforeDestroy() {
+                     console.log(sql);
+                      // },);
+                    db.query(sql, function (err, results, fields) {
+                     if(err){
+                       console.log('Error while fetching General Ledger Record, err');
+                      // results(null,err);
+                  //    res.send(alert('fail to load General Ledger record'));
+                    }else{
+
+
+                       console.log('Generl Ledger fetched successfully');
+                      console.log(results);
+                           res.send(results);
+
+                       //results(null,res);
+                    }
+
+
+                  //  db.end();
+
+                    });
+                    });
 
 
 
@@ -2267,6 +2312,140 @@ app.post("/productData", function(req, res, next) {
 
                 });
                 });
+                app.get("/loadInvoiceTransaction", function(req, res, next) {
+                  var companyID = req.query.companyID;
+                  var supplierID = req.query.supplierID;
+                  var pur_sal = req.query.pur_sal;
+                  var invoiceNo = req.query.invoiceNo;
+
+
+                  console.log(companyID);
+
+                  var db = mysql.createConnection({
+                  host: process.env.DB_HOST,
+                  user: process.env.DB_USER,
+                  password: process.env.DB_PASSWORD,
+                  database: process.env.DB_NAME,
+                  timezone : "+00:00",
+                });
+                // ale/  var userLevel = req.query.userLevel;
+              if (pur_sal === 'P') {
+                  var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and pur_sal = '"+pur_sal+"' and suppCustID = '"+supplierID+"' and invoiceNo = '"+invoiceNo+"' order by txnDate";
+                    // console.log(req.beforeDestroy() {
+                   console.log(sql);
+
+               }else {
+                 var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and pur_sal = '"+pur_sal+"' and invoiceNo = '"+invoiceNo+"' order by txnDate";
+               }
+                  db.query(sql, function (err, results, fields) {
+                   if(err){
+                     console.log('Error while fetching Purchase Invoice Record, err');
+                    // results(null,err);
+                    res.send(err);
+                   }else{
+
+
+                          console.log(results);
+                        res.send(results);
+
+                  }
+                })
+              
+
+
+              //    db.end();
+
+            //     });
+
+                  });
+
+
+                app.get("/loadPurchaseInvoice", function(req, res, next) {
+                  var companyID = req.query.companyID;
+                  var startDate = req.query.startDate;
+                  var endDate = req.query.endDate;
+
+
+                  console.log(companyID);
+                  console.log(startDate)+" to "+endDate
+                  var db = mysql.createConnection({
+                  host: process.env.DB_HOST,
+                  user: process.env.DB_USER,
+                  password: process.env.DB_PASSWORD,
+                  database: process.env.DB_NAME,
+                  timezone : "+00:00",
+                });  // ale/  var userLevel = req.query.userLevel;
+
+                  var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and txnDate >= '"+startDate+"' and txnDate <= '"+endDate+"' and invType='PUR'";
+                    // console.log(req.beforeDestroy() {
+                   console.log(sql);
+                    // },);
+                  db.query(sql, function (err, results, fields) {
+                   if(err){
+                     console.log('Error while fetching Purchase Invoice Record, err');
+                    // results(null,err);
+                    res.send(err);
+                   }else{
+
+                  //     if (results.length>0) {
+                          console.log(results);
+                        res.send(results);
+                  //      } else {
+
+              //          res.send("fail");
+                  }
+
+
+                     //results(null,res);
+
+
+
+              //    db.end();
+
+
+                  });
+                  });
+                  app.get("/lastSalesReceipt", function(req, res, next) {
+                    var companyID = req.query.companyID;
+                    var jvInit  = req.query.jvInit;
+
+                    console.log(companyID);
+                    var db = mysql.createConnection({
+                    host: process.env.DB_HOST,
+                    user: process.env.DB_USER,
+                    password: process.env.DB_PASSWORD,
+                    database: process.env.DB_NAME,
+                    timezone : "+00:00",
+                  });  // ale/  var userLevel = req.query.userLevel;
+
+                    var sql="SELECT * FROM invoiceTxn WHERE companyID = '"+companyID+"' AND jvInit = '"+jvInit+"' AND pur_sal = 'S' ORDER BY SUBSTRING(receiptNo, 6, 9 )*1 DESC LIMIT 1";
+                      // console.log(req.beforeDestroy() {
+                     console.log(sql);
+                      // },);
+                    db.query(sql, function (err, results, fields) {
+                     if(err) {
+                       console.log('Error while fetching Sales Invoice Record, err');
+                      // results(null,err);
+                      res.send(alert('fail to get Sales Receipt No. record'));
+                     }else{
+                            if (results[0].receiptNo === null) {
+                              results[0].receiptNo = '';
+                            }
+
+                            console.log(results);
+                          res.send(results);
+                          // if no record return null array
+
+                       //results(null,res);
+                       }
+
+
+            //        db.end();
+
+
+                    });
+                    });
+
                 app.get("/lastSalesInvoice", function(req, res, next) {
                   var companyID = req.query.companyID;
                   var jvInit  = req.query.jvInit;
@@ -2305,14 +2484,14 @@ app.post("/productData", function(req, res, next) {
 
                   });
                   });
-
-                  app.get("/salesInvoiceSummary", function(req, res, next) {
+                  app.get("/loadSalesInvoice", function(req, res, next) {
                     var companyID = req.query.companyID;
-                    var supplierID = req.query.supplierID;
-                    var invoiceNo = req.query.invoiceNo;
+                    var startDate = req.query.startDate;
+                    var endDate = req.query.endDate;
 
 
                     console.log(companyID);
+                    console.log(startDate)+" to "+endDate
                     var db = mysql.createConnection({
                     host: process.env.DB_HOST,
                     user: process.env.DB_USER,
@@ -2321,7 +2500,7 @@ app.post("/productData", function(req, res, next) {
                     timezone : "+00:00",
                   });  // ale/  var userLevel = req.query.userLevel;
 
-                    var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and suppCustID = '"+supplierID+"' and invoiceNo = '"+invoiceNo+"' and invType='SAL'";
+                    var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and txnDate >= '"+startDate+"' and txnDate <= '"+endDate+"' and invType='SAL'";
                       // console.log(req.beforeDestroy() {
                      console.log(sql);
                       // },);
@@ -2329,20 +2508,20 @@ app.post("/productData", function(req, res, next) {
                      if(err){
                        console.log('Error while fetching Sales Invoice Record, err');
                       // results(null,err);
-                      res.send("Invalid");
+                      res.send(err);
                      }else{
 
-                         if (results.length>0) {
+                    //     if (results.length>0) {
                             console.log(results);
                           res.send(results);
-                          } else {
+                    //      } else {
 
-                          res.send("Invalid");
-                          }
+                //          res.send("fail");
+                    }
 
 
                        //results(null,res);
-                       }
+
 
 
                 //    db.end();
@@ -2350,6 +2529,7 @@ app.post("/productData", function(req, res, next) {
 
                     });
                     });
+
 
                 app.get("/salesInvoiceVerify", function(req, res, next) {
                   var companyID = req.query.companyID;
@@ -2481,6 +2661,45 @@ app.post("/productData", function(req, res, next) {
 
                 });
                 });
+                app.get("/purchaseInvoiceDetail", function(req, res, next) {
+                  var companyID = req.query.companyID;
+                //  var supplierID = req.query.supplierID;
+                  var invoiceNo = req.query.invoiceNo;
+
+
+                  console.log(companyID);
+                  var db = mysql.createConnection({
+                  host: process.env.DB_HOST,
+                  user: process.env.DB_USER,
+                  password: process.env.DB_PASSWORD,
+                  database: process.env.DB_NAME,
+                  timezone : "+00:00",
+                });  // ale/  var userLevel = req.query.userLevel;
+
+                  var sql="SELECT * from purchaseInvoice where companyID = '"+companyID+"' and invoiceNo = '"+invoiceNo+"'";
+                    // console.log(req.beforeDestroy() {
+                   console.log(sql);
+                    // },);
+                  db.query(sql, function (err, results, fields) {
+                   if(err){
+                     console.log('Error while fetching Sales Invoice Detail Record, err');
+                    // results(null,err);
+                    res.send(alert('fail to load Sales Invoice Detail record'));
+                   }else{
+
+
+                          console.log(results);
+                        res.send(results);
+
+                     //results(null,res);
+                     }
+
+
+                //            db.end();
+
+
+                  });
+                  });
 
                 app.get("/purchaseInvoiceSearch", function(req, res, next) {
                   var companyID = req.query.companyID;
@@ -2533,7 +2752,7 @@ app.post("/productData", function(req, res, next) {
                     timezone : "+00:00",
                   });  // ale/  var userLevel = req.query.userLevel;
 
-                    var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and suppCustID = '"+supplierID+"' and invoiceNo = '"+invoiceNo+"'";
+                    var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and suppCustID = '"+supplierID+"' and invoiceNo = '"+invoiceNo+"' and pur_sal='P'";
                       // console.log(req.beforeDestroy() {
                      console.log(sql);
                       // },);
@@ -2598,13 +2817,12 @@ app.post("/productData", function(req, res, next) {
                       });
                       });
 
-
-                      app.get("/salesInvoiceDetail", function(req, res, next) {
+                      app.get("/purchaseNoteVerify", function(req, res, next) {
                         var companyID = req.query.companyID;
                         var supplierID = req.query.supplierID;
-                        var invoiceNo = req.query.invoiceNo;
-  
-  
+                        var documentNo = req.query.documentNo;
+                      //  var invType = req.query.invType;
+
                         console.log(companyID);
                         var db = mysql.createConnection({
                         host: process.env.DB_HOST,
@@ -2613,8 +2831,84 @@ app.post("/productData", function(req, res, next) {
                         database: process.env.DB_NAME,
                         timezone : "+00:00",
                       });  // ale/  var userLevel = req.query.userLevel;
-  
-                        var sql="SELECT * from salesInvoice where companyID = '"+companyID+"' and customerID = '"+supplierID+"' and invoiceNo = '"+invoiceNo+"'";
+
+                        var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and suppCustID = '"+supplierID+"' and documentNo = '"+documentNo+"'";
+                          // console.log(req.beforeDestroy() {
+                         console.log(sql);
+                          // },);
+                        db.query(sql, function (err, results, fields) {
+                         if(err){
+                           console.log('Error while fetching invoiceTxn Record, err');
+                          // results(null,err);
+                          res.send(alert('fail to load invoiceTxn record'));
+                         }else{
+                                console.log(results);
+                              res.send(results);
+
+                           }
+
+              //          db.end();
+
+                        });
+                        });
+
+                      app.get("/salesInvoiceSummary", function(req, res, next) {
+                        var companyID = req.query.companyID;
+                        var supplierID = req.query.supplierID;
+                        var invoiceNo = req.query.invoiceNo;
+
+
+
+                        console.log(companyID);
+                        var db = mysql.createConnection({
+                        host: process.env.DB_HOST,
+                        user: process.env.DB_USER,
+                        password: process.env.DB_PASSWORD,
+                        database: process.env.DB_NAME,
+                        timezone : "+00:00",
+                      });  // ale/  var userLevel = req.query.userLevel;
+
+                        var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and suppCustID = '"+supplierID+"' and invoiceNo = '"+invoiceNo+"' and pur_sal = 'S'";
+                          // console.log(req.beforeDestroy() {
+                         console.log(sql);
+                          // },);
+                        db.query(sql, function (err, results, fields) {
+                         if(err){
+                           console.log('Error while fetching invoiceTxn ,'+  err);
+                          // results(null,err);
+                          res.send(alert('fail to load Sales Invoice record'));
+                         }else{
+
+
+                                console.log(results);
+                              res.send(results);
+
+                           //results(null,res);
+                           }
+
+
+                      //      db.end();
+
+
+                        });
+                        });
+
+                      app.get("/salesInvoiceDetail", function(req, res, next) {
+                        var companyID = req.query.companyID;
+                      //  var supplierID = req.query.supplierID;
+                        var invoiceNo = req.query.invoiceNo;
+
+
+                        console.log(companyID);
+                        var db = mysql.createConnection({
+                        host: process.env.DB_HOST,
+                        user: process.env.DB_USER,
+                        password: process.env.DB_PASSWORD,
+                        database: process.env.DB_NAME,
+                        timezone : "+00:00",
+                      });  // ale/  var userLevel = req.query.userLevel;
+
+                        var sql="SELECT * from salesInvoice where companyID = '"+companyID+"' and invoiceNo = '"+invoiceNo+"'";
                           // console.log(req.beforeDestroy() {
                          console.log(sql);
                           // },);
@@ -2624,20 +2918,90 @@ app.post("/productData", function(req, res, next) {
                           // results(null,err);
                           res.send(alert('fail to load Sales Invoice Detail record'));
                          }else{
-  
-  
+
+
                                 console.log(results);
                               res.send(results);
-  
+
                            //results(null,res);
                            }
-  
-  
+
+
             //            db.end();
-  
-  
+
+
                         });
                         });
+
+                        app.get("/salesNoteVerify", function(req, res, next) {
+                          var companyID = req.query.companyID;
+                        //  var supplierID = req.query.supplierID;
+                          var documentNo = req.query.documentNo;
+                        //  var invType = req.query.invType;
+
+                          console.log(companyID);
+                          var db = mysql.createConnection({
+                          host: process.env.DB_HOST,
+                          user: process.env.DB_USER,
+                          password: process.env.DB_PASSWORD,
+                          database: process.env.DB_NAME,
+                          timezone : "+00:00",
+                        });  // ale/  var userLevel = req.query.userLevel;
+
+                          var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and documentNo = '"+documentNo+"'";
+                            // console.log(req.beforeDestroy() {
+                           console.log(sql);
+                            // },);
+                          db.query(sql, function (err, results, fields) {
+                           if(err){
+                             console.log('Error while fetching invoiceTxn Record, err');
+                            // results(null,err);
+                            res.send(alert('fail to load invoiceTxn record'));
+                           }else{
+                                  console.log(results);
+                                res.send(results);
+
+                             }
+
+                      //          db.end();
+
+                          });
+                          });
+
+                          app.get("/salesReceiptVerify", function(req, res, next) {
+                            var companyID = req.query.companyID;
+                          //  var supplierID = req.query.supplierID;
+                            var receiptNo = req.query.receiptNo;
+                          //  var invType = req.query.invType;
+
+                            console.log(companyID);
+                            var db = mysql.createConnection({
+                            host: process.env.DB_HOST,
+                            user: process.env.DB_USER,
+                            password: process.env.DB_PASSWORD,
+                            database: process.env.DB_NAME,
+                            timezone : "+00:00",
+                          });  // ale/  var userLevel = req.query.userLevel;
+
+                            var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and receiptNo = '"+receiptNo+"'";
+                              // console.log(req.beforeDestroy() {
+                             console.log(sql);
+                              // },);
+                            db.query(sql, function (err, results, fields) {
+                             if(err){
+                               console.log('Error while fetching invoiceTxn Record, err');
+                              // results(null,err);
+                              res.send(alert('fail to load invoiceTxn record'));
+                             }else{
+                                    console.log(results);
+                                  res.send(results);
+
+                               }
+
+                        //          db.end();
+
+                            });
+                            });
 
 
     app.get("/glReportSearch", function(req, res, next) {

@@ -41,15 +41,10 @@ var supplierID = invData[0].supplierID;
 var supplierName=invData[0].supplierName;
 var invoiceNo = '' ;
 var txnDate = invData[0].txnDate;
-var invType = invData[0].invType;
-var documentNo = '';
-
-var taxID = '' ;
-var taxRate = 0 ;
-var taxCode = '';
-// var txnParticular = '';
-var taxType = '';
-var taxDescription = '';
+var invType = 'SPY';
+var documentNo = invData[0].documentNo;
+var receiptNo = invData[0].receiptNo;
+// var taxDescription = '';
 var remark = '';
 var txnTotal= 0;
 var txnAmount = 0;
@@ -61,16 +56,15 @@ var txnTaxTotal = 0;
 var txnNetTotal = 0
 var drAmt =0;
 var crAmt = 0;
-var txnType = 'CREDIT NOTE';
-var txnParticular = 'Purchase Invoice Credit Note';
-var documentType= 'PCN';
-  if (invType === 'PDN') {
-     txnType = 'DEBIT NOTE';
-     txnParticular = 'Purchase Invoice Debit Note';
-     documentType = 'PDN';
-  }
+var txnType = 'PAYMENT';
+var txnParticular = '';
+var documentType= 'SPY';
+var txnParticular = invData[0].paymentParticular;
+var receiptNo = invData[0].receiptNo;
+
 
 console.log(invData);
+
    //  console.log(req.body.password+req.body.adminName+req.body.companyID+ " "+ md5Password);
     var dbquery = ''
 
@@ -95,21 +89,23 @@ console.log(invData);
 
 
 
-   taxID = invData[i].taxID;
-   taxCode = invData[i].taxCode;
-   taxRate = invData[i].taxRate;
-   taxType = invData[i].taxType;
-   remark = invData[i].remark;
-   invoiceNo = invData[i].invoiceNo;
-   documentNo = invData[i].documentNo;
-   taxDescription = invData[i].taxDescription;
-   txnDescription = invData[i].txnParticular;
-   txnAmount = parseFloat(invData[i].txnAmount);
-   taxTotal = parseFloat(invData[i].taxTotal);
-   noteTaxTotal += parseFloat(invData[i].taxTotal);
-   netTotal = invData[i].netTotal;
+//   taxID = invData[i].taxID;
+//   taxCode = invData[i].taxCode;//
+  // taxRate = invData[i].taxRate;
+//   taxType = invData[i].taxType;
+//   remark = invData[i].remark;
+   invoiceNo = invData[i].invoiceNo;//
+  // documentNo = invData[i].documentNo;
+//   taxDescription = invData[i].taxDescription;//
+   txnParticular = invData[i].paymentParticular;
+   txnAmount = parseFloat(invData[i].payAmount);
+   drAmt = 0.00;
+   crAmt = parseFloat(invData[i].payAmount);
+   taxTotal = 0.00;
+   noteTaxTotal += 0.00;
+   netTotal = crAmt; //invData[i].payAmount;
    txnTotal+=txnAmount;
-   txnTaxTotal+=taxTotal;
+   txnTaxTotal+=txnTotal;
    txnNetTotal+=netTotal;
 
 
@@ -117,7 +113,7 @@ console.log(invData);
 
 
   // add taxTxn
-  if (taxType === 'INPUT') {
+/*
   dbquery = "INSERT INTO taxTxn (companyID, taxID, taxType, taxCode, taxDescription, remark, itemAmount, taxRate, taxAmount, suppCustID, documentNo, documentType, document_date, date_created) VALUE('" + companyID + "', '"+ taxID + "', '"+ taxType + "', '"+ taxCode + "', '"+ taxDescription + "', '"+remark+"', '"+txnAmount+"', '"+taxRate+"', '"+taxTotal+"', '"+supplierID+"', '"+invoiceNo+"', '"+documentType+"', '"+txnDate+"', CURDATE())"
   console.log(dbquery);
       con.query(dbquery, function(err, row) {
@@ -133,7 +129,7 @@ console.log(invData);
                            }
 
                        });
-  }
+
 
 
 
@@ -143,13 +139,13 @@ console.log(invData);
   } else {
    drAmt = netTotal;
    crAmr = 0;
-  }
-// add new invoiceTxn
+*/
+//return alert("update payment")
 
-
-dbquery = "INSERT INTO invoiceTxn (companyID, suppCustID, suppCustName, txnType, invType, pur_sal, documentNo, jvInit, voucherNo, invoiceNo, txnDate, txnParticular, invoiceTotal, discountTotal, taxID, taxRate, taxTotal, drAmt, crAmt, date_created) VALUE('" + companyID + "', '"+ supplierID + "', '"+ supplierName + "', '"+ txnType + "', '"+ invType + "', 'P', '"+documentNo+"', '"+jvInit+"', '"+voucherNo+"', '"+invoiceNo+"', '"+txnDate+"', '"+txnParticular+"', '"+txnAmount+"', '0.00', '', '0', '"+taxTotal+"', '"+drAmt+"',  '"+crAmt+"', CURDATE())"
+dbquery = "INSERT INTO invoiceTxn (companyID, suppCustID, suppCustName, txnType, invType, pur_sal, documentNo, receiptNo,  jvInit, voucherNo, invoiceNo, txnDate, txnParticular, invoiceTotal, discountTotal, taxID, taxRate, taxTotal, drAmt, crAmt, date_created) VALUE('" + companyID + "', '"+ supplierID + "', '"+ supplierName + "', '"+ txnType + "', '"+ invType + "', 'S', '"+documentNo+"', '"+receiptNo+"', '"+jvInit+"', '"+voucherNo+"', '"+invoiceNo+"', '"+txnDate+"', '"+txnParticular+"', '"+txnAmount+"', '0.00', '', '0', '"+taxTotal+"', '"+drAmt+"',  '"+crAmt+"', CURDATE())"
 
 console.log(dbquery);
+
     con.query(dbquery, function(err, row) {
 
                         if (err) {
@@ -165,7 +161,8 @@ console.log(dbquery);
                      });
 
     };
-   con.end();
+
+//   con.end();
 
 });
 
