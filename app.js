@@ -2350,7 +2350,7 @@ app.post("/productData", function(req, res, next) {
 
                   }
                 })
-              
+
 
 
               //    db.end();
@@ -3003,6 +3003,128 @@ app.post("/productData", function(req, res, next) {
                             });
                             });
 
+
+                            app.get("/loadGlBalance", function(req, res, next) {
+                              var companyID = req.query.companyID;
+                              var txnDate = req.query.txnDate;
+                              var glNo = req.query.glNo;
+                              var glSub = req.query.glSub;
+                              var opBalance = 0;
+                              var curBalance =0;
+                              var sumBalance=0;
+                              console.log(companyID);
+                              console.log(txnDate);
+
+                              var db = mysql.createConnection({
+                              host: process.env.DB_HOST,
+                              user: process.env.DB_USER,
+                              password: process.env.DB_PASSWORD,
+                              database: process.env.DB_NAME,
+                              timezone : "+00:00",
+                            });  // ale/  var userLevel = req.query.userLevel;
+
+                              // *** tsearch glAccount table for
+                                var sql ="SELECT * from glAccount where companyID = '"+companyID+"' and glNo = '"+glNo+"' and glSub = '"+glSub+"'";
+                                 console.log(sql);
+                                 db.query(sql, function (err, results, fields) {
+                                  if(err){
+                                    console.log('Error while fetching G/L Account Record, err');
+                                   // results(null,err);
+                                   res.send(alert("Error: "+err));
+                                  }else{
+
+                                      if (results.length > 0) {
+                                          opBalance = results[0].opBalance;
+                                          console.log("O/P Balance = "+opBalance);
+                                      } else {
+                                       res.send(alert('No records existed with G/L No. '+glNo+' and G/L Sub No.'+glSub));
+                                       }
+                                  }
+                              });
+
+                                // Sum opcrAMt and drAmt in Jourm\nal file ****
+
+                                sql="SELECT SUM(drAmt-crAmt) AS sumBalance FROM journal where companyID='"+companyID+"' and glNo='"+glNo+"' and glSub='"+glSub+"' and txnDate<='"+txnDate+"'";
+                                 console.log(sql);
+
+                                 db.query(sql, function (err, results, fields) {
+                                  if(err){
+                                    console.log('Error while sum Journal Record, err');
+                                   // results(null,err);
+                                   res.send(alert('fail to sum Journal record'));
+                                  }else{
+
+                                      if (results.length>0) {
+                                          results[0].sumBalance = opBalance+results[0].sumBalance;
+                                          sumBalance=results[0].sumBalance;
+
+                                         //  console.log("first Sumbalance: "+sumBalance);
+                                       } else {
+
+                                          curBalance = opBalance;
+                                          sumBalance = 0;
+                                       }
+                                         if (sumBalance === null) {
+                                             sumBalance =0;
+                                         }
+                                        // sumBalance = opBalance+sumBalance;
+                                        // sun console.log("Type: "+(typeof sumBalance));
+                                        // opBalance = curBalance;
+                                         console.log("sumBalance: "+sumBalance)
+                                         console.log("opBalance: "+opBalance);
+                                         console.log(results[0].sumBalance);
+                                         res.send(results);
+                                    //results(null,res);
+                                    }
+                                });
+         /*
+                                // Load Journal Transaction record ****
+                                sql="SELECT * from journal where companyID = '"+companyID+"' and glNo='"+glNo+"' and glSub='"+glSub+"' and txnDate>='"+startDate+"' and txnDate<='"+ endDate +"' order by txnDate, voucherNo ASC";
+                            //  var sql="SELECT * from journal where companyID = '"+companyID+"' order by txnDate ASC";
+                                // console.log(req.beforeDestroy() {
+                               console.log(sql);
+                                // },);
+                              db.query(sql, function (err, results, fields) {
+                               if(err){
+                                 console.log('Error while fetching Journal Record, err');
+                                // results(null,err);
+                                res.send(alert('fail to load Journal record'));
+                               }else{
+
+                                   if (results.length>0) {
+                                      console.log(results);
+                            //          results[0].opBal=opBalance+sumBalance;
+                                 results[0].opBal=opBalance+sumBalance;
+                                 results[0].curBal= (opBalance+sumBalance)+results[0].drAmt-results[0].crAmt;
+                                 curBalance = results[0].curBal;
+
+                                 for (let i = 1; i < results.length; i++) {
+
+                                       results[i].curBal = curBalance+results[i].drAmt-results[i].crAmt;
+                                       curBalance = results[i].curBal;
+                                       results[i].opBal = 0;
+                                     // else {
+
+                                     // console.log(i+" : "+curBalance);
+                                 }
+
+                                    res.send(results);
+                                    } else {
+
+                                    res.send(alert('No records between '+startDate+' and '+endDate));
+                                    }
+
+
+                                 //results(null,res);
+                                 }
+
+
+                            //    db.end();
+
+
+                              });
+                          */
+                              });
 
     app.get("/glReportSearch", function(req, res, next) {
       var companyID = req.query.companyID;
