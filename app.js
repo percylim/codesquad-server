@@ -58,7 +58,7 @@ var salesInvoiceRouter = require('./routes/salesInvoice');
 var salesNoteRouter = require('./routes/salesNote');
 var salesReturnNoteRouter = require('./routes/salesReturnNote');
 var salesPaymentRouter = require('./routes/salesPayment');
-
+var bankReconciliationRouter = require('./routes/bankReconciliation');
 
 
 // upload = multer({dest: 'uploads/'});
@@ -159,6 +159,7 @@ app.use("/purchasePayment", purchasePaymentRouter);
 app.use("/salesInvoice", salesInvoiceRouter);
 app.use("/salesReturnNote", salesReturnNoteRouter);
 app.use("/salesPayment", salesPaymentRouter);
+app.use("/bankReconciliation", bankReconciliationRouter);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -218,6 +219,38 @@ app.get("/", function(req, res){
 
 //app.get('/cool', (req, res) => res.send(cool()));
 
+app.post("/bankReconDelete", function(req, res, next) {
+   var companyID = req.body.companyID;
+   var bankID = req.body.bankID;
+   var txnDate = req.body.txnDate;
+
+   var db = mysql.createConnection({
+   host: process.env.DB_HOST,
+   user: process.env.DB_USER,
+   password: process.env.DB_PASSWORD,
+   database: process.env.DB_NAME,
+   timezone : "+00:00",
+ });  // ale/  var userLevel = req.query.userLevel;
+
+ var sql="DELETE from bankRecon where companyID = '"+companyID+"' AND bankID='"+ bankID +"' AND txnDate='"+txnDate+"'" ;
+   // console.log(req.beforeDestroy() {
+  console.log(sql);
+   // },);
+ db.query(sql, function (err, results, fields) {
+  if(err){
+    console.log('Error while deleting Tax Record, err');
+   res.send("fail");
+  }else{
+
+
+    console.log('Bank Reconciliation Record delete successfully');
+    console.log(results.affectedRows);
+   res.send("Bank Reconciliation for Bank: "+bankID+" at "+txnDate+" successfully deleted");
+    //results(null,res);
+ }
+//   db.end();
+});
+});
 
 
   app.post("/employeeDelete", function(req, res, next) {
@@ -545,6 +578,105 @@ app.get("/", function(req, res){
         });
         });
 
+
+
+          app.get("/bankReconSearch", function(req, res, next) {
+            var companyID = req.query.companyID;
+            var bankID= req.query.bankID;
+            var txnDate = req.query.txnDate;
+            var db = mysql.createConnection({
+              host: process.env.DB_HOST,
+              user: process.env.DB_USER,
+              password: process.env.DB_PASSWORD,
+              database: process.env.DB_NAME,
+              timezone : "+00:00",
+              connectionLimit: 100,
+            });  // alert(c
+          //  var userLevel = req.query.userLevel;
+            console.log(companyID);
+          //  db = conn.getConnection();
+          //  db.connect(function(err) {
+        //      if (err) throw err;
+        //      console.log("Connected!");
+        //      });
+
+            // console.log(userLevel);I
+            //console.log('req.body here -> ', categoryID);
+            var sql="SELECT * from bankRecon where companyID = '"+companyID+"' and bankID='"+bankID+"' and txnDate = '"+txnDate+"'";
+              // console.log(req.beforeDestroy() {
+             console.log(sql);
+              // },);
+            db.query(sql, function (err, results, fields) {
+             if(err){
+               console.log('Error while fetching Bank Reconciliation Record, err');
+              // results(null,err);
+              res.send(null);
+            }else{
+
+               console.log('Bank Reconciliation fetched successfully');
+                console.log(results);
+                   res.send(results);
+
+               //results(null,res);
+            }
+
+        //     db.end();
+
+
+            });
+            });
+
+            app.get("/bankReconSummary", function(req, res, next) {
+              var companyID = req.query.companyID;
+          //    var bankID= req.query.bankID;
+              var startDate = req.query.startDate;
+              var endDate = req.query.endDate
+              var db = mysql.createConnection({
+                host: process.env.DB_HOST,
+                user: process.env.DB_USER,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_NAME,
+                timezone : "+00:00",
+                connectionLimit: 100,
+              });  // alert(c
+            //  var userLevel = req.query.userLevel;
+              console.log(companyID);
+            //  db = conn.getConnection();
+            //  db.connect(function(err) {
+            //      if (err) throw err;
+            //      console.log("Connected!");
+            //      });
+
+              // console.log(userLevel);I
+              //console.log('req.body here -> ', categoryID);
+              var sql="SELECT * from bankRecon where companyID = '"+companyID+"' and (DATE(txnDate) BETWEEN '"+startDate+"' and '"+endDate+"') and rowNo = 0 order by txnDate ASC";
+                // console.log(req.beforeDestroy() {
+               console.log(sql);
+                // },);
+              db.query(sql, function (err, results, fields) {
+               if(err){
+                 console.log('Error while fetching Bank Reconciliation Record, err');
+                // results(null,err);
+                res.send(null);
+              }else{
+               if (results.length>0) {
+                 console.log('Bank Reconciliation fetched successfully');
+                  console.log(results);
+                     res.send(results);
+                } else {
+                  res.send(alert('No Bank Reconciliation between '+startDate+' and '+endDate));
+                }
+                 //results(null,res);
+              }
+
+            //     db.end();
+
+
+              });
+              });
+
+
+
   app.post("/companyData", function(req, res, next) {
     var companyID = req.body.companyID;
 
@@ -589,6 +721,7 @@ app.get("/", function(req, res){
   //   db.end();
      });
     });
+
 
 
       app.post("/employeeData", function(req, res, next) {
@@ -1432,6 +1565,7 @@ app.get("/glSelectList", function(req, res, next) {
             var db = mysql.createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
+
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
             timezone : "+00:00",
