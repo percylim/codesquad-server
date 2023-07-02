@@ -55,6 +55,7 @@ var purchaseNoteRouter = require('./routes/purchaseNote');
 var purchaseReturnNoteRouter = require('./routes/purchaseReturnNote');
 var purchasePaymentRouter = require('./routes/purchasePayment');
 var salesInvoiceRouter = require('./routes/salesInvoice');
+var salesInvoiceEditRouter = require('./routes/salesInvoiceEdit');
 var salesNoteRouter = require('./routes/salesNote');
 var salesReturnNoteRouter = require('./routes/salesReturnNote');
 var salesPaymentRouter = require('./routes/salesPayment');
@@ -157,6 +158,7 @@ app.use("/purchaseNote", purchaseNoteRouter);
 app.use("/purchaseReturnNote", purchaseReturnNoteRouter);
 app.use("/purchasePayment", purchasePaymentRouter);
 app.use("/salesInvoice", salesInvoiceRouter);
+app.use("/salesInvoiceEdit", salesInvoiceEditRouter);
 app.use("/salesReturnNote", salesReturnNoteRouter);
 app.use("/salesPayment", salesPaymentRouter);
 app.use("/bankReconciliation", bankReconciliationRouter);
@@ -1164,7 +1166,7 @@ app.post("/bankReconDelete", function(req, res, next) {
       //    console.log(database);
         // console.log(userLevel);
         //console.log('req.body here -> ', categoryID);
-        var sql="SELECT * from glAccount where companyID = '"+companyID+"' AND (glType='401' OR glType='501' OR glType='201') order by glNo";
+        var sql="SELECT * from glAccount where companyID = '"+companyID+"' AND (glType='401' OR glType='501' OR glType='201' OR glType='301') order by glNo";
           // console.log(req.beforeDestroy() {
          console.log(sql);
           // },);
@@ -2175,6 +2177,47 @@ app.get("/glSelectList", function(req, res, next) {
                               });
 
 
+                              app.get("/productAdjustWritrOffSearch", function(req, res, next) {
+                                var companyID = req.query.companyID;
+                                var startDate = req.query.startDate;
+                                var endDate = req.query.endDate;
+                                var txnType = req.query.txnType;
+
+                                var db = mysql.createConnection({
+                                  host: process.env.DB_HOST,
+                                  user: process.env.DB_USER,
+                                  password: process.env.DB_PASSWORD,
+                                  database: process.env.DB_NAME,
+                                  timezone : "+00:00",
+                                });  // alert(c
+                              //  var userLevel = req.query.userLevel;
+                                console.log(companyID);
+                                // console.log(userLevel);
+                                //console.log('req.body here -> ', categoryID);
+                                var sql="SELECT * from productTxn where companyID = '"+companyID+"' and txnType='"+txnType+"' and txnDate >= '"+startDate+"' and txnDate <= '"+endDate+"' order by txnDate";
+                                  // console.log(req.beforeDestroy() {
+                                 console.log(sql);
+                                  // },);
+                                db.query(sql, function (err, results, fields) {
+                                 if(err){
+                                   console.log('Error while fetching Product Txn. Search, err');
+                                  // results(null,err);
+                                  res.send(alert('fail to load Product Txn. search'));
+                                }else{
+
+
+                                   console.log('Product Txn. search successfully');
+                                  console.log(results);
+                                       res.send(results);
+
+                                   //results(null,res);
+                                }
+
+                        //                   db.end();
+
+
+                                });
+                                });
 
                             app.get("/productListByCategory", function(req, res, next) {
                               var companyID = req.query.companyID;
@@ -2229,6 +2272,127 @@ app.get("/glSelectList", function(req, res, next) {
     //  res.sendFile('./public/uploads/' + files, { root: '.' })
 
 });
+app.post("/productAdjust", function(req, res, next) {
+    var data = req.body;
+console.log(data);
+    var companyID = data.companyID;
+    var productID = data.productID;
+    var productName = data.productName;
+    var sku = data.sku;
+    var barcode = data.barcode;
+    var unit = data.unit;
+    var unitPrice = data.unitPrice;
+    var adjQty = data.adjQty;
+    var txnDate = data.txnDate;
+    var txnParticular = data.txnParticular;
+    var txnType = 'ADJUSTMENT';
+    var txnQtyIn = 0;
+    var txnQtyOut =0;
+    if ((typeof adjQty) === 'string') {
+        adjQty=Number(adjQty);
+    }
+console.log(adjQty);
+
+  //  if (adjQty < 0 ){
+  //     txnQtyout = (adjQty*-1);
+  //  }
+
+    if (adjQty <0 ){
+       txnQtyOut = adjQty * -1;
+     }
+     if (adjQty >0 ) {
+        txnQtyIn = adjQty;
+     }
+    var db = mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      timezone : "+00:00",
+    });  // alert(c   // var categoryID = req.body.categoryID;
+
+
+    dbquery = "INSERT INTO productTxn (companyID, productID, sku, barcode, productName, unit, unitPrice, txnType, txnQtyIn, txnQtyOut, txnDate, txnParticular, date_created) VALUE('" + companyID + "', '"+ productID+"', '"+sku+"', '"+barcode+"', '"+productName+"', '"+unit+"', '"+unitPrice+"', '"+txnType+"', '"+txnQtyIn+"', '"+txnQtyOut+"', '"+txnDate+"', '"+txnParticular+"', CURDATE())"
+
+    console.log(dbquery);
+        db.query(dbquery, function(err, row) {
+
+                            if (err) {
+                              //console.log(err.message);
+                              console.log(err);
+                            //  res.send(alert(err+" occured in input data, update fail"));
+                             //res.sendStatus(500);
+                             // return;
+                             } else {
+                              console.log("New Adjustment ProductTxn created")
+                              res.send('success');
+                             }
+
+          });
+
+});
+
+app.post("/productWriteOff", function(req, res, next) {
+    var data = req.body;
+console.log(data);
+    var companyID = data.companyID;
+    var productID = data.productID;
+    var productName = data.productName;
+    var sku = data.sku;
+    var barcode = data.barcode;
+    var unit = data.unit;
+    var unitPrice = data.unitPrice;
+    var adjQty = data.adjQty;
+    var txnDate = data.txnDate;
+    var txnParticular = data.txnParticular;
+    var txnType = 'WRITEOFF';
+    var txnQtyIn = 0;
+    var txnQtyOut =0;
+    if ((typeof adjQty) === 'string') {
+        adjQty=Number(adjQty);
+    }
+console.log(adjQty);
+
+  //  if (adjQty < 0 ){
+  //     txnQtyout = (adjQty*-1);
+  //  }
+
+    if (adjQty < 0 ){
+       txnQtyOut = adjQty * -1;
+     } else {
+       txnQtyOut = adjQty;
+     }
+
+
+    var db = mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      timezone : "+00:00",
+    });  // alert(c   // var categoryID = req.body.categoryID;
+
+
+    dbquery = "INSERT INTO productTxn (companyID, productID, sku, barcode, productName, unit, unitPrice, txnType, txnQtyIn, txnQtyOut, txnDate, txnParticular, date_created) VALUE('" + companyID + "', '"+ productID+"', '"+sku+"', '"+barcode+"', '"+productName+"', '"+unit+"', '"+unitPrice+"', '"+txnType+"', '"+txnQtyIn+"', '"+txnQtyOut+"', '"+txnDate+"', '"+txnParticular+"', CURDATE())"
+
+    console.log(dbquery);
+        db.query(dbquery, function(err, row) {
+
+                            if (err) {
+                              //console.log(err.message);
+                              console.log(err);
+                            //  res.send(alert(err+" occured in input data, update fail"));
+                             //res.sendStatus(500);
+                             // return;
+                             } else {
+                              console.log("New WTITE OFF ProductTxn created")
+                              res.send('success');
+                             }
+
+          });
+
+});
+
 
 app.post("/productData", function(req, res, next) {
   var companyID = req.body.companyID;
@@ -2709,7 +2873,45 @@ app.post("/productData", function(req, res, next) {
 
                   });
                   });
+                  app.get("/salesInvoiceDetail", function(req, res, next) {
+                    var companyID = req.query.companyID;
+                  //  var supplierID = req.query.supplierID;
+                    var invoiceNo = req.query.invoiceNo;
 
+
+                    console.log(companyID);
+                    var db = mysql.createConnection({
+                    host: process.env.DB_HOST,
+                    user: process.env.DB_USER,
+                    password: process.env.DB_PASSWORD,
+                    database: process.env.DB_NAME,
+                    timezone : "+00:00",
+                  });  // ale/  var userLevel = req.query.userLevel;
+
+                    var sql="SELECT * from salesInvoice where companyID = '"+companyID+"' and invoiceNo = '"+invoiceNo+"'";
+                      // console.log(req.beforeDestroy() {
+                     console.log(sql);
+                      // },);
+                    db.query(sql, function (err, results, fields) {
+                     if(err){
+                       console.log('Error while fetching Sales Invoice Record, err');
+                      // results(null,err);
+                      res.send(alert('fail to load Sales Invoice record'));
+                     }else{
+
+
+                            console.log(results);
+                          res.send(results);
+
+                     //results(null,res);
+                       }
+
+
+                    db.end();
+
+
+                    });
+                    });
                   app.get("/lastSalesNote", function(req, res, next) {
                     var companyID = req.query.companyID;
                     var jvInit  = req.query.jvInit;
@@ -3998,12 +4200,14 @@ for (let i = 0; i < voucherData.length; i++) {
   let dAmt = voucherData[i].drAmt;
   let cAmt = voucherData[i].crAmt;
 // alert(dAmt+" = "+cAmt);
+
 if (typeof dAmt !=='undefined') {
   drAmt=dAmt.replace(/,(?=.*\.\d+)/g, '');
 }
 if (typeof cAmt !=='undefined') {
   crAmt=cAmt.replace(/,(?=.*\.\d+)/g, '');
 }
+
   voucherData[i].drAmt = drAmt;
   voucherData[i].crAmt = crAmt;
 

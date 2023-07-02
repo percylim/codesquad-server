@@ -94,6 +94,7 @@ console.log(voucherData);
                        console.log(jvData);
 
 var jvDate
+if (jvData.length > 0) {
 for (let i = 0; i < jvData.length; i++) {
 
 jvDate = jvData[i].txnDate.toISOString().slice(0, 10);
@@ -116,6 +117,7 @@ dbquery = "INSERT INTO journalChange (companyID, glNo, glSub, department, glName
   }
 
 });
+
 //glAmount= jvData[i].drAmt - jvData[i].crAmt;
 // reverse the glAccount data
 dbquery = "UPDATE glAccount SET glAmount=glAmount-'"+glAmount+"' WHERE companyID='"+companyID+"' AND glNo='"+jvData[i].glNo+"' AND glSub='"+jvData[i].glSub+"' AND department='"+jvData[i].department+"'"
@@ -187,7 +189,7 @@ dbquery = "SElECT * FROM glTxn WHERE companyID='"+ companyID+ "' and glNo='"+ jv
 
 
 } // for
-
+} // if jvData.lrngth > 0
 // insert new change journal\\\
  console.log(voucherData);
 for (let i = 0; i < voucherData.length; i++) {
@@ -211,7 +213,7 @@ for (let i = 0; i < voucherData.length; i++) {
 
 //glAmount= (parseFloat(drAmt) - parseFloat(crAmt));
                          // create new record
- dbquery = "INSERT INTO journal (companyID, glNo, glSub, department, glName, jeParticular, voucherNo, drAmt, crAmt, userName, txnDate, voucherType, date_created) VALUE('" + companyID + "', '"+ glNo + "', '"+ glSub + "', '"+ department + "', '"+ glName + "', '"+jeParticular+"', '"+voucherNo+"', '"+ drAmt +"', '"+crAmt+"', '"+userName+"', '"+ txnDate+"', 'JV', CURDATE())"
+ dbquery = "INSERT INTO journal (companyID, glNo, glSub, department, glName, jeParticular, voucherNo, drAmt, crAmt, userName, txnDate, voucherType, date_created, status) VALUE('" + companyID + "', '"+ glNo + "', '"+ glSub + "', '"+ department + "', '"+ glName + "', '"+jeParticular+"', '"+voucherNo+"', '"+ drAmt +"', '"+crAmt+"', '"+userName+"', '"+ txnDate+"', 'JV', CURDATE(), 'EDITED')"
 
 console.log(dbquery);
      con.query(dbquery, function(err, row) {
@@ -280,7 +282,7 @@ dbquery = "SElECT * FROM glTxn WHERE companyID='"+ companyID+ "' and glNo='"+ vo
         // let tAmount = 12345.00
             console.log('total:'+tAmount);
 
-          dbquery = "INSERT INTO glTxn (companyID, glNo, glSub, department, glName, txnAmount, txnDate) VALUE('" + companyID + "', '"+ voucherData[i].glNo + "', '"+ voucherData[i].glSub + "', '"+ voucherData[i].department + "', '"+ voucherData[i].glName + "', '"+ tAmount +"', '"+txnDate+"')"
+          dbquery = "INSERT INTO glTxn (companyID, glNo, glSub, department, glName, txnAmount, txnDate, status) VALUE('" + companyID + "', '"+ voucherData[i].glNo + "', '"+ voucherData[i].glSub + "', '"+ voucherData[i].department + "', '"+ voucherData[i].glName + "', '"+ tAmount +"', '"+txnDate+"', 'EDITED')"
 
           console.log(dbquery);
               con.query(dbquery, function(err, row) {
