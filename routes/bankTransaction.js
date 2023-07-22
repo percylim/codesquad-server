@@ -213,7 +213,7 @@ for (let i = 0; i < voucherData.length; i++) {
 } // 1a
 }  // #1
 }); // check bank
- //con.end();
+ con.end();
 }); // post
 
 

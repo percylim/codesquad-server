@@ -149,6 +149,22 @@ console.log(dbquery);
                           }
 
                       });
+
+dbquery ="UPDATE product SET cost='"+unitPrice+"' where companyID='"+companyID+"' AND productID='"+productID+"'"
+console.log(dbquery);
+     con.query(dbquery, function(err, row) {
+
+                         if (err) {
+                           //console.log(err.message);
+                           console.log(err);
+                         //  res.send(alert(err+" occured in input data, update fail"));
+                          //res.sendStatus(500);
+                          // return;
+                          } else {
+                           console.log("New ProductT Cost Added")
+                          }
+
+                      });
  }
 
   // add taxTxn if is not free of tax
@@ -194,8 +210,7 @@ console.log(dbquery);
                      });
 
 
-   con.end();
-
+  con.end()
 });
 
 

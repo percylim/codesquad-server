@@ -69,6 +69,7 @@ var txnParticular = 'Sales Invoice';
 var term = invData[0].paymentTerm;
 var userName = invData[0].userName;
 var reasons = invData[0].remark;
+var cost = invData[0].cost;
 // var dueDate = txnDate.getDate()+invData[0].paymentTerm
 var saleData = [];
 console.log(invData);
@@ -114,7 +115,7 @@ console.log(invData);
 console.log('********** ready to save to salesInvoiceChange ******* '+saleData.length);
 for (let i = 0; i < saleData.length; i++) {
   console.log('********** save to salesInvoiceChange table *******');
-dbquery = "INSERT INTO salesInvoiceChange (companyID, customerID, customerName, invoiceNo, invoiceDate, productID, barcode, productName, productDescription, unit, salesQty, unitPrice,  itemDiscount, taxID, taxType, taxCode, taxRate, itemTotal, taxItemTotal, itemNetTotal, voucherNo, jvInit, dueDate, salesRep, remark1, remark2, remark3, remark4, remark5, remark6, dateChange, userChange, reasons, status, date_created) VALUE('" + companyID + "', '"+ customerID + "', '"+ customerName + "', '"+ invoiceNo + "', '"+ txnDate + "', '"+saleData[i].productID+"', '"+saleData[i].barcode+"', '"+saleData[i].productName+"', '"+saleData[i].productDescription+"', '"+saleData[i].unit+"', '"+saleData[i].salesQty+"', '"+saleData[i].unitPrice+"', '"+saleData[i].itemDiscount+"', '"+saleData[i].taxID+"', '"+saleData[i].taxType+"', '"+saleData[i].taxCode+"', '"+saleData[i].taxRate+"', '"+saleData[i].itemTotal+"', '"+saleData[i].taxItemTotal+"', '"+saleData[i].itemNetTotal+"', '"+saleData[i].voucherNo+"','"+saleData[i].jvInit+"', '"+saleData[i].dueDate+"','"+saleData[i].salesRep+"','"+saleData[i].remark1+"', '"+saleData[i].remark2+"', '"+saleData[i].remark3+"', '"+saleData[i].remark4+"', '"+saleData[i].remark5+"', '"+saleData[i].remark6+"', CURDATE(),'"+userName+"', '"+reasons+"', 'ED',   CURDATE())"
+dbquery = "INSERT INTO salesInvoiceChange (companyID, customerID, customerName, invoiceNo, invoiceDate, productID, barcode, productName, productDescription, unit, salesQty, unitPrice,  itemDiscount, taxID, taxType, taxCode, taxRate, itemTotal, taxItemTotal, itemNetTotal, voucherNo, jvInit, dueDate, salesRep, remark1, remark2, remark3, remark4, remark5, remark6, dateChange, userChange, reasons, status, cost, date_created) VALUE('" + companyID + "', '"+ customerID + "', '"+ customerName + "', '"+ invoiceNo + "', '"+ txnDate + "', '"+saleData[i].productID+"', '"+saleData[i].barcode+"', '"+saleData[i].productName+"', '"+saleData[i].productDescription+"', '"+saleData[i].unit+"', '"+saleData[i].salesQty+"', '"+saleData[i].unitPrice+"', '"+saleData[i].itemDiscount+"', '"+saleData[i].taxID+"', '"+saleData[i].taxType+"', '"+saleData[i].taxCode+"', '"+saleData[i].taxRate+"', '"+saleData[i].itemTotal+"', '"+saleData[i].taxItemTotal+"', '"+saleData[i].itemNetTotal+"', '"+saleData[i].voucherNo+"','"+saleData[i].jvInit+"', '"+saleData[i].dueDate+"','"+saleData[i].salesRep+"','"+saleData[i].remark1+"', '"+saleData[i].remark2+"', '"+saleData[i].remark3+"', '"+saleData[i].remark4+"', '"+saleData[i].remark5+"', '"+saleData[i].remark6+"', CURDATE(),'"+userName+"', '"+reasons+"', 'ED', '"+saleData[i].cost+"',   CURDATE())"
 
  console.log(dbquery);
 
@@ -181,6 +182,7 @@ dbquery = "INSERT INTO salesInvoiceChange (companyID, customerID, customerName, 
    salesQty=invData[i].salesQuantity;
    unit = invData[i].unit;
    unitPrice= invData[i].unitPrice;
+   cost = invData[i].cost;
    itemTotal = invData[i].itemTotal;
    itemDiscount= invData[i].itemDiscount;
    taxItemTotal = invData[i].taxItemTotal;
@@ -203,7 +205,7 @@ dbquery = "INSERT INTO salesInvoiceChange (companyID, customerID, customerName, 
 
 
                           // create new record
-dbquery = "INSERT INTO salesInvoice (companyID, customerID, customerName, invoiceNo, invoiceDate, productID, barcode, productName, productDescription, unit, salesQty, unitPrice,  itemDiscount, taxID, taxType, taxCode, taxRate, itemTotal, taxItemTotal, itemNetTotal, voucherNo, jvInit, dueDate, salesRep, remark1, remark2, remark3, remark4, remark5, remark6, date_created, status) VALUE('" + companyID + "', '"+ customerID + "', '"+ customerName + "', '"+ invoiceNo + "', '"+ txnDate + "', '"+productID+"', '"+barcode+"', '"+productName+"', '"+productDescription+"', '"+unit+"', '"+salesQty+"', '"+unitPrice+"', '"+itemDiscount+"', '"+taxID+"', '"+taxType+"', '"+taxCode+"', '"+taxRate+"', '"+itemTotal+"', '"+taxItemTotal+"', '"+itemNetTotal+"', '"+voucherNo+"','"+jvInit+"', '"+dueDate+"','"+salesRep+"','"+remark1+"', '"+remark2+"', '"+remark3+"', '"+remark4+"', '"+remark5+"', '"+remark6+"', CURDATE(), 'EDITED')"
+dbquery = "INSERT INTO salesInvoice (companyID, customerID, customerName, invoiceNo, invoiceDate, productID, barcode, productName, productDescription, unit, salesQty, unitPrice,  itemDiscount, taxID, taxType, taxCode, taxRate, itemTotal, taxItemTotal, itemNetTotal, voucherNo, jvInit, dueDate, salesRep, remark1, remark2, remark3, remark4, remark5, remark6, date_created, status, cost) VALUE('" + companyID + "', '"+ customerID + "', '"+ customerName + "', '"+ invoiceNo + "', '"+ txnDate + "', '"+productID+"', '"+barcode+"', '"+productName+"', '"+productDescription+"', '"+unit+"', '"+salesQty+"', '"+unitPrice+"', '"+itemDiscount+"', '"+taxID+"', '"+taxType+"', '"+taxCode+"', '"+taxRate+"', '"+itemTotal+"', '"+taxItemTotal+"', '"+itemNetTotal+"', '"+voucherNo+"','"+jvInit+"', '"+dueDate+"','"+salesRep+"','"+remark1+"', '"+remark2+"', '"+remark3+"', '"+remark4+"', '"+remark5+"', '"+remark6+"', CURDATE(), 'EDITED', '"+cost+"')"
 
  console.log(dbquery);
 
@@ -293,7 +295,7 @@ console.log(dbquery);
 
                      });
 
-  // con.end();
+   con.end();
 
 });
 

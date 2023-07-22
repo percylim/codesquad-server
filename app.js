@@ -1186,7 +1186,7 @@ app.post("/bankReconDelete", function(req, res, next) {
         }
 
 
-    //    db.end();
+        db.end();
 
         });
         });
@@ -1228,7 +1228,7 @@ app.post("/bankReconDelete", function(req, res, next) {
         }
 
 
-      //  db.end();
+        db.end();
 
         });
         });
@@ -1269,7 +1269,7 @@ app.get("/glSelectList", function(req, res, next) {
           }
 
 
-        //  db.end();
+          db.end();
 
           });
           });
@@ -1349,7 +1349,7 @@ app.get("/glSelectList", function(req, res, next) {
          //results(null,res);
       }
 
-    //     db.end();
+         db.end();
 
 
       });
@@ -1387,7 +1387,7 @@ app.get("/glSelectList", function(req, res, next) {
            //results(null,res);
         }
 
-    //   con.end();
+       con.end();
 
 
         });
@@ -1433,7 +1433,7 @@ app.get("/glSelectList", function(req, res, next) {
             res.send(results);
 
          }
-  //         db.end();
+           db.end();
            });
           });
 
@@ -1477,7 +1477,7 @@ app.get("/glSelectList", function(req, res, next) {
               res.send(results);
 
            }
-    //       db.end();
+           db.end();
              });
             });
             // upload image
@@ -1558,7 +1558,7 @@ app.get("/glSelectList", function(req, res, next) {
                res.send("success");
                 //results(null,res);
              }
-      //       db.end();
+             db.end();
           })
           });
           app.get("/taxVerify", function(req, res, next) {
@@ -1599,7 +1599,7 @@ app.get("/glSelectList", function(req, res, next) {
             }
 
 
-    //        db.end();
+            db.end();
 
             });
             });
@@ -1637,7 +1637,7 @@ app.get("/glSelectList", function(req, res, next) {
             }
 
 
-          //  db.end();
+            db.end();
 
             });
             });
@@ -1682,7 +1682,7 @@ app.get("/glSelectList", function(req, res, next) {
                 res.send(results);
 
              }
-            //   db.end();
+               db.end();
                });
               });
 
@@ -1733,7 +1733,7 @@ app.get("/glSelectList", function(req, res, next) {
                 }
 
 
-    //            db.end();
+                db.end();
 
                 });
                 });
@@ -1778,7 +1778,7 @@ app.get("/glSelectList", function(req, res, next) {
                     res.send(results);
 
                  }
-        //           db.end();
+                   db.end();
                    });
                   });
 
@@ -1809,7 +1809,7 @@ app.get("/glSelectList", function(req, res, next) {
                        res.send("success");
                         //results(null,res);
                      }
-      //               db.end();
+                     db.end();
                   })
                   });
 
@@ -1857,7 +1857,7 @@ app.get("/glSelectList", function(req, res, next) {
                        //results(null,res);
                     }
 
-      //               db.end()
+                     db.end()
 
 
                     });
@@ -1903,7 +1903,7 @@ app.get("/glSelectList", function(req, res, next) {
                         res.send(results);
 
                      }
-      //                 db.end();
+                       db.end();
                        });
                       });
 
@@ -1934,7 +1934,7 @@ app.get("/glSelectList", function(req, res, next) {
                            res.send("success");
                             //results(null,res);
                          }
-        //                 db.end();
+                         db.end();
                       })
                       });
 
@@ -1970,7 +1970,7 @@ app.get("/glSelectList", function(req, res, next) {
                            //results(null,res);
                         }
 
-            //             db.end();
+                         db.end();
 
 
                         });
@@ -2008,7 +2008,7 @@ app.get("/glSelectList", function(req, res, next) {
                              //results(null,res);
                           }
 
-            //               db.end();
+                           db.end();
 
 
                           });
@@ -2051,7 +2051,7 @@ app.get("/glSelectList", function(req, res, next) {
 
                                //results(null,res);
                             }
-              //             db.end();
+                           db.end();
                             });
                             });
 
@@ -2092,7 +2092,7 @@ app.get("/glSelectList", function(req, res, next) {
 
                                  //results(null,res);
                               }
-                    //            db.end();
+                                db.end();
                               });
                               // db.end();
                               });
@@ -2130,7 +2130,7 @@ app.get("/glSelectList", function(req, res, next) {
                                //results(null,res);
                             }
 
-      //                       db.end();
+                             db.end();
 
 
                             });
@@ -2170,7 +2170,7 @@ app.get("/glSelectList", function(req, res, next) {
                                  //results(null,res);
                               }
 
-            //                   db.end();
+                               db.end();
 
 
                               });
@@ -2213,7 +2213,7 @@ app.get("/glSelectList", function(req, res, next) {
                                    //results(null,res);
                                 }
 
-                        //                   db.end();
+                                           db.end();
 
 
                                 });
@@ -2252,7 +2252,7 @@ app.get("/glSelectList", function(req, res, next) {
                                  //results(null,res);
                               }
 
-                //               db.end();
+                               db.end();
 
 
                               });
@@ -2327,7 +2327,7 @@ console.log(adjQty);
                               console.log("New Adjustment ProductTxn created")
                               res.send('success');
                              }
-
+db.end()
           });
 
 });
@@ -2388,7 +2388,7 @@ console.log(adjQty);
                               console.log("New WTITE OFF ProductTxn created")
                               res.send('success');
                              }
-
+db.end()
           });
 
 });
@@ -2435,7 +2435,7 @@ app.post("/productData", function(req, res, next) {
 
     res.send(null);
    }
-//    db.end()
+    db.end()
    });
   });
 
@@ -2605,7 +2605,7 @@ app.post("/productData", function(req, res, next) {
                    }
 
 
-    //            db.end();
+                db.end();
 
 
                 });
@@ -2647,6 +2647,7 @@ app.post("/productData", function(req, res, next) {
                         res.send(results);
 
                   }
+                  db.end()
                 })
 
 
@@ -2698,7 +2699,7 @@ app.post("/productData", function(req, res, next) {
 
 
 
-              //    db.end();
+                  db.end();
 
 
                   });
@@ -2738,7 +2739,7 @@ app.post("/productData", function(req, res, next) {
                        }
 
 
-            //        db.end();
+                    db.end();
 
 
                     });
@@ -2777,7 +2778,7 @@ app.post("/productData", function(req, res, next) {
                      }
 
 
-          //        db.end();
+                  db.end();
 
 
                   });
@@ -2822,7 +2823,7 @@ app.post("/productData", function(req, res, next) {
 
 
 
-                //    db.end();
+                    db.end();
 
 
                     });
@@ -2947,7 +2948,7 @@ app.post("/productData", function(req, res, next) {
                        }
 
 
-                  //  db.end();
+                    db.end();
 
 
                     });
@@ -2992,7 +2993,7 @@ app.post("/productData", function(req, res, next) {
                    }
 
 
-        //        db.end();
+                db.end();
 
 
                 });
@@ -3031,7 +3032,7 @@ app.post("/productData", function(req, res, next) {
                      }
 
 
-                //            db.end();
+                            db.end();
 
 
                   });
@@ -3107,7 +3108,7 @@ app.post("/productData", function(req, res, next) {
                        }
 
 
-              //      db.end();
+                    db.end();
 
 
                     });
@@ -3144,7 +3145,7 @@ app.post("/productData", function(req, res, next) {
 
                          }
 
-                    //          db.end();
+                              db.end();
 
                       });
                       });
@@ -3184,11 +3185,87 @@ app.post("/productData", function(req, res, next) {
                            }
 
 
-                    //      db.end();
+                          db.end();
 
 
                         });
                         });
+
+                        app.get("/salesYearlyReport", function(req, res, next) {
+                          var companyID = req.query.companyID;
+                          var pur_sal = 'S';
+                          var startDate = req.query.startDate;
+                          var endDate = req.query.endDate;
+
+                          console.log(startDate);
+                          var db = mysql.createConnection({
+                          host: process.env.DB_HOST,
+                          user: process.env.DB_USER,
+                          password: process.env.DB_PASSWORD,
+                          database: process.env.DB_NAME,
+                          timezone : "+00:00",
+                        });  // ale/  var userLevel = req.query.userLevel;
+
+                          var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and pur_sal ='S' and (invType = 'SAL' or invType= 'SCN' or invType='SRN' or invType='SDN') and txnDate>='"+startDate+"' and txnDate<='"+endDate+"' order by txnDate";
+                            // console.log(req.beforeDestroy() {
+                           console.log(sql);
+                            // },);
+                          db.query(sql, function (err, results, fields) {
+                           if(err){
+                             console.log('Error while fetching invoiceTxn Record, err');
+                            // results(null,err);
+                            res.send(alert('fail to load invoiceTxn record'));
+                           }else{
+                                  console.log(results);
+                                res.send(results);
+
+                             }
+
+                                  db.end();
+
+                          });
+                          });
+
+                          app.get("/purchaseInvoiceSummary", function(req, res, next) {
+                            var companyID = req.query.companyID;
+                            var supplierID = req.query.supplierID;
+                            var invoiceNo = req.query.invoiceNo;
+
+
+
+                            console.log(companyID);
+                            var db = mysql.createConnection({
+                            host: process.env.DB_HOST,
+                            user: process.env.DB_USER,
+                            password: process.env.DB_PASSWORD,
+                            database: process.env.DB_NAME,
+                            timezone : "+00:00",
+                          });  // ale/  var userLevel = req.query.userLevel;
+
+                            var sql="SELECT * from invoiceTxn where companyID = '"+companyID+"' and suppCustID = '"+supplierID+"' and invoiceNo = '"+invoiceNo+"' and pur_sal='P'";
+                              // console.log(req.beforeDestroy() {
+                             console.log(sql);
+                              // },);
+                            db.query(sql, function (err, results, fields) {
+                             if(err){
+                               console.log('Error while fetching invoiceTxn ,'+  err);
+                              // results(null,err);
+                              res.send(alert('fail to load Invoice record'));
+                             }else{
+
+
+                                    console.log(results);
+                                  res.send(results);
+
+                               //results(null,res);
+                               }
+
+
+                              db.end();
+
+
+                            });
+                            });
 
                     app.get("/purchaseInvoiceDetail", function(req, res, next) {
                       var companyID = req.query.companyID;
@@ -3224,7 +3301,7 @@ app.post("/productData", function(req, res, next) {
                          }
 
 
-          //            db.end();
+                      db.end();
 
 
                       });
@@ -3260,7 +3337,7 @@ app.post("/productData", function(req, res, next) {
 
                            }
 
-              //          db.end();
+                        db.end();
 
                         });
                         });
@@ -3300,7 +3377,7 @@ app.post("/productData", function(req, res, next) {
                            }
 
 
-                      //      db.end();
+                          db.end();
 
 
                         });
@@ -3340,7 +3417,7 @@ app.post("/productData", function(req, res, next) {
                            }
 
 
-            //            db.end();
+                        db.end();
 
 
                         });
@@ -3376,7 +3453,7 @@ app.post("/productData", function(req, res, next) {
 
                              }
 
-                      //          db.end();
+                                db.end();
 
                           });
                           });
@@ -3411,7 +3488,7 @@ app.post("/productData", function(req, res, next) {
 
                                }
 
-                        //          db.end();
+                                  db.end();
 
                             });
                             });
@@ -3489,6 +3566,7 @@ app.post("/productData", function(req, res, next) {
                                          res.send(results);
                                     //results(null,res);
                                     }
+                                    db.end()
                                 });
          /*
                                 // Load Journal Transaction record ****
@@ -3652,7 +3730,7 @@ app.post("/productData", function(req, res, next) {
          }
 
 
-  //    db.end();
+      db.end();
 
 
       });
@@ -3770,7 +3848,7 @@ app.post("/productData", function(req, res, next) {
            }
 
 
-  //      db.end();
+        db.end();
 
 
         });
@@ -3817,7 +3895,7 @@ app.post("/productData", function(req, res, next) {
            }
 
 
-    //    db.end();
+        db.end();
 
 
         });
@@ -3863,7 +3941,7 @@ app.post("/productData", function(req, res, next) {
              }
 
 
-    //      db.end();
+          db.end();
 
 
           });
@@ -4242,6 +4320,7 @@ for (let i = 0; i < voucherData.length; i++) {
       } // 2  to level
 
    res.send("Success");
+   con.end()
  });
 
 
@@ -4600,6 +4679,7 @@ if (voucherData[i].voucherNo !==undefined) {
 
           };  //query
         res.send("Success");
+    //    con.end()
    }); // db.connect
 
 

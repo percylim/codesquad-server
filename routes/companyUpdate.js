@@ -98,6 +98,7 @@ dbquery="UPDATE company SET registerNo = '"+registerNo+"', address1 = '"+address
 
 
                   };
+                  con.end();
                 });
 
 

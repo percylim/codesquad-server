@@ -237,6 +237,7 @@ con.query(dbquery, function(err, row) {
 
 //con.end();
  res.send("Success");
+// con.end();
 }
 
 // 2  to level

@@ -150,7 +150,7 @@ dbquery = "SElECT * FROM glTxn WHERE companyID='"+ companyID+ "' and glNo='"+ jv
       //  con.end();
     }); // db.connect
 
-  // con.end();
+   con.end();
 });
 
 
