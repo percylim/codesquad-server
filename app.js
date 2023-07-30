@@ -60,7 +60,7 @@ var salesNoteRouter = require('./routes/salesNote');
 var salesReturnNoteRouter = require('./routes/salesReturnNote');
 var salesPaymentRouter = require('./routes/salesPayment');
 var bankReconciliationRouter = require('./routes/bankReconciliation');
-
+var monthlyTrialBalanceRouter = require('./routes/monthlyTrialBalance');
 
 // upload = multer({dest: 'uploads/'});
 // var homeRouter = require("./routes/sidebar");
@@ -162,6 +162,7 @@ app.use("/salesInvoiceEdit", salesInvoiceEditRouter);
 app.use("/salesReturnNote", salesReturnNoteRouter);
 app.use("/salesPayment", salesPaymentRouter);
 app.use("/bankReconciliation", bankReconciliationRouter);
+app.use("/monthlyTrialBalance", monthlyTrialBalanceRouter);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -3617,6 +3618,7 @@ app.post("/productData", function(req, res, next) {
                           */
                               });
 
+
     app.get("/glReportSearch", function(req, res, next) {
       var companyID = req.query.companyID;
       var startDate = req.query.startDate;
@@ -3651,7 +3653,8 @@ app.post("/productData", function(req, res, next) {
                   opBalance = results[0].opBalance;
                   console.log("O/P Balance = "+opBalance);
               } else {
-               res.send(alert('No records existed with G/L No. '+glNo+' and G/L Sub No.'+glSub));
+            //   res.send(alert('No records existed with G/L No. '+glNo+' and G/L Sub No.'+glSub));
+
                }
           }
       });
@@ -3720,9 +3723,9 @@ app.post("/productData", function(req, res, next) {
          }
 
             res.send(results);
-            } else {
-
-            res.send(alert('No records between '+startDate+' and '+endDate));
+          } else {
+             res.send([{opBal: opBalance, drAmt: 0, crAmt: 0, curBal: opBalance,}]);
+          //  res.send(alert('No records between '+startDate+' and '+endDate));
             }
 
 
@@ -3835,8 +3838,8 @@ app.post("/productData", function(req, res, next) {
                // else {
 
                // console.log(i+" : "+curBalance);
-           }
-
+              }
+              console.log(results);
               res.send(results);
               } else {
 
@@ -3848,7 +3851,7 @@ app.post("/productData", function(req, res, next) {
            }
 
 
-        db.end();
+    //    db.end();
 
 
         });

@@ -210,7 +210,7 @@ console.log(dbquery);
                      });
 
 
-  con.end()
+//  con.end()
 });
 
 

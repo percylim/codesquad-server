@@ -83,13 +83,13 @@ router.post('/', function(req, res, next) {
                            }
 
                        });
-                       con.end();
+                    //   con.end();
                    } // 2
                  }
                });
 
 
-           con.end();
+        //   con.end();
 });
 
 

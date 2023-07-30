@@ -86,7 +86,7 @@ router.post('/', function(req, res, next) {
                             console.log("Product Profile updated")
                             res.send("Success");
                            }
-                           con.end();
+                      //     con.end();
 
                        });
                    } // 2
@@ -94,7 +94,7 @@ router.post('/', function(req, res, next) {
                });
 
 
-           con.end();
+      //     con.end();
 });
 
 
