@@ -35,12 +35,16 @@ router.post('/', function(req, res, next) {
        console.log(dbquery);
     var con = mysql.createConnection({
         'host': env.DB_HOST,
-        'user':'centra55_codesquaddb',
-        'password': 'Z3@Xn^DIu_(i',
-        'database':'centra55_codesquaddb',
-      timezone : "+00:00",
+        user: 'centralsoft',
+        password: 'F7eTo+zZ1c!9b*6e',
+        database: 'codesquaddb',
+        timezone : "+00:00",
     });
-
+  //  host: process.env.DB_HOST,
+//    user: 'centralsoft',
+//    password: 'F7eTo+zZ1c!9b*6e',
+//    database: 'codesquaddb',
+//    timezone : "+00:00",
     con.connect(function(err) {
           if (err) throw err;
           console.log("Connected!");
