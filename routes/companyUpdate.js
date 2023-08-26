@@ -38,6 +38,7 @@ router.post('/', function(req, res, next) {
     var finYearEnd = req.body.finYearEnd;
     var companyLogo = req.body.companyLogo;
     var bankAccount = req.body.bankAccount;
+    var businessCode = req.body.businessCode;
    //  console.log(req.body.password+req.body.adminName+req.body.companyID+ " "+ md5Password);
     var dbquery = "SElECT * FROM company WHERE companyID="+"'"+ req.body.companyID+ "'";
        console.log(dbquery);
@@ -76,7 +77,7 @@ router.post('/', function(req, res, next) {
                     if (row.length>0) {
                      console.log("Company Account already existed, process update");
                     // return res.status(404).json({ error: "Company Account existed" });
-dbquery="UPDATE company SET registerNo = '"+registerNo+"', address1 = '"+address1+"', address2 = '"+address2+"', postcode='"+postcode+"', city='"+city+"', state='"+state+"', country='"+country+"', incomeTaxNo='"+incomeTaxNo+"', epfNo='"+epfNo+"', socsoNo='"+socsoNo+"', gstNo='"+gstNo+"', telNo1='"+telNo1+"', telNo2='"+telNo2+"', faxNo='"+faxNo+"', email='"+email+"', website='"+website+"', finYearStart='"+finYearStart+"', finYearEnd='"+finYearEnd+"', companyLogo='"+companyLogo+"', bankAccount='"+bankAccount+"' WHERE companyID='"+companyID+"'"
+dbquery="UPDATE company SET registerNo = '"+registerNo+"', address1 = '"+address1+"', address2 = '"+address2+"', postcode='"+postcode+"', city='"+city+"', state='"+state+"', country='"+country+"', businessCode='"+businessCode+"', incomeTaxNo='"+incomeTaxNo+"', epfNo='"+epfNo+"', socsoNo='"+socsoNo+"', gstNo='"+gstNo+"', telNo1='"+telNo1+"', telNo2='"+telNo2+"', faxNo='"+faxNo+"', email='"+email+"', website='"+website+"', finYearStart='"+finYearStart+"', finYearEnd='"+finYearEnd+"', companyLogo='"+companyLogo+"', bankAccount='"+bankAccount+"' WHERE companyID='"+companyID+"'"
 
                   } else {   // create new data
 

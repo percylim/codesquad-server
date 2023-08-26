@@ -61,6 +61,11 @@ var salesReturnNoteRouter = require('./routes/salesReturnNote');
 var salesPaymentRouter = require('./routes/salesPayment');
 var bankReconciliationRouter = require('./routes/bankReconciliation');
 var monthlyTrialBalanceRouter = require('./routes/monthlyTrialBalance');
+var monthlyRevenueRouter = require('./routes/monthlyRevenue');
+var PNLCostOfSalesRouter = require('./routes/PNLCostOfSales');
+var PNLExpensesRouter = require('./routes/PNLExpenses');
+var balanceSheetRouter = require('./routes/balanceSheet');
+var incomeTaxUpdateRouter = require('./routes/incomeTaxUpdate');
 
 // upload = multer({dest: 'uploads/'});
 // var homeRouter = require("./routes/sidebar");
@@ -163,6 +168,11 @@ app.use("/salesReturnNote", salesReturnNoteRouter);
 app.use("/salesPayment", salesPaymentRouter);
 app.use("/bankReconciliation", bankReconciliationRouter);
 app.use("/monthlyTrialBalance", monthlyTrialBalanceRouter);
+app.use("/monthlyRevenue", monthlyRevenueRouter);
+app.use("/PNLCostOfSales", PNLCostOfSalesRouter);
+app.use("/PNLExpenses", PNLExpensesRouter);
+app.use("/balanceSheet", balanceSheetRouter);
+app.use("/incomeTaxUpdate", incomeTaxUpdateRouter);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -1229,7 +1239,7 @@ app.post("/bankReconDelete", function(req, res, next) {
         }
 
 
-        db.end();
+        //db.end();
 
         });
         });
@@ -1319,9 +1329,9 @@ app.get("/glSelectList", function(req, res, next) {
 
 
 
-    app.post("/departmentInfo", function(req, res, next) {
+    app.get("/departmentInfo", function(req, res, next) {
 
-      var companyID = req.body.companyID;
+      var companyID = req.query.companyID;
 
       console.log(companyID);
       var db = mysql.createConnection({
@@ -1356,8 +1366,8 @@ app.get("/glSelectList", function(req, res, next) {
       });
       });
 
-      app.post("/glTypeInfo", function(req, res, next) {
-        var companyID = req.body.companyID;
+      app.get("/glTypeInfo", function(req, res, next) {
+        var companyID = req.query.companyID;
          // server connection
         var con = mysql.createConnection({
           host: process.env.DB_HOST,
@@ -1369,7 +1379,7 @@ app.get("/glSelectList", function(req, res, next) {
 
         console.log(companyID);
         //console.log('req.body here -> ', categoryID);
-        var sql="SELECT id, glType, glTypeName from glType  order by glType";
+        var sql="SELECT * from glType  order by glType";
           // console.log(req.beforeDestroy() {
          console.log(sql);
           // },);
@@ -1388,7 +1398,7 @@ app.get("/glSelectList", function(req, res, next) {
            //results(null,res);
         }
 
-       con.end();
+    //   con.end();
 
 
         });
@@ -1414,7 +1424,7 @@ app.get("/glSelectList", function(req, res, next) {
            db.query(sql, function (err, results, fields) {
             if(err){
               console.log('Error while fetching General Ledger Record, err');
-              res.send('Error while fetching General Ledger Record');
+          //    res.send('Error while fetching General Ledger Record');
              // results(null,err);
           }else{
 
@@ -1439,9 +1449,9 @@ app.get("/glSelectList", function(req, res, next) {
           });
 
           app.get("/glData", function(req, res, next) {
-            var companyID = req.body.companyID;
-            var glNo = req.body.glNo;
-             var glSub = req.body.glSub;
+            var companyID = req.query.companyID;
+            var glNo = req.query.glNo;
+             var glSub = req.query.glSub;
              var db = mysql.createConnection({
                host: process.env.DB_HOST,
                user: process.env.DB_USER,
@@ -1458,7 +1468,7 @@ app.get("/glSelectList", function(req, res, next) {
              db.query(sql, function (err, results, fields) {
               if(err){
                 console.log('Error while fetching General Ledger Record, err');
-                res.send('Error while fetching General Ledger Record');
+              //  res.send('Error while fetching General Ledger Record');
                // results(null,err);
             }else{
 
@@ -1562,6 +1572,123 @@ app.get("/glSelectList", function(req, res, next) {
              db.end();
           })
           });
+          app.post("/incomeTaxDelete", function(req, res, next) {
+            var companyID = req.body.companyID;
+          //  var taxID = req.body.taxID;
+          //   console.log(taxID);
+             var db = mysql.createConnection({
+             host: process.env.DB_HOST,
+             user: process.env.DB_USER,
+             password: process.env.DB_PASSWORD,
+             database: process.env.DB_NAME,
+             timezone : "+00:00",
+           });  // ale/  var userLevel = req.query.userLevel;
+
+             var sql="DELETE from incomeTax where companyID = '"+companyID+"'" ;
+               // console.log(req.beforeDestroy() {
+              console.log(sql);
+               // },);
+             db.query(sql, function (err, results, fields) {
+              if(err){
+                console.log('Error while deleting Income Tax Record, err');
+               res.send("fail");
+              }else{
+
+
+                console.log('Income Tax Record delete successfully');
+               res.send("success");
+                //results(null,res);
+             }
+             db.end();
+          })
+          });
+          app.get("/loadTaxComputation", function(req, res, next) {
+            var companyID = req.query.companyID;
+            var profit = req.query.profit;
+          //  var incomeTo = req.query.incomeTo;
+            var db = mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            timezone : "+00:00",
+          });  // ale/  var userLevel = req.query.userLevel;
+          //  console.log(companyID);
+            // console.log(userLevel);
+            //console.log('req.body here -> ', categoryID);
+            var sql="SELECT * from incomeTax where companyID = '"+companyID+"' and '"+profit+"' >= incomeFrom and '"+profit+"' <= incomeTo";
+              // console.log(req.beforeDestroy() {
+             console.log(sql);
+              // },);
+            db.query(sql, function (err, results, fields) {
+             if(err) {
+               console.log('Error while fetching Income Tax Record: '+err);
+              return;
+              // results(null,err);
+            //  res.send(alert('fail to load Government Tax record'));
+            }else{
+
+
+               console.log('Income Tax fetched successfully');
+              console.log(results);
+                   res.send(results);
+
+               //results(null,res);
+            }
+
+
+            db.end();
+
+            });
+            });
+
+          app.post("/saveIncomeTax", function(req, res, next) {
+          //  var companyID = req.body.companyID;
+            var data = req.body;
+            const todaysDate = new Date();
+            const year = todaysDate.getFullYear();
+          //   console.log(taxID);
+             var db = mysql.createConnection({
+             host: process.env.DB_HOST,
+             user: process.env.DB_USER,
+             password: process.env.DB_PASSWORD,
+             database: process.env.DB_NAME,
+             timezone : "+00:00",
+           });  // ale/  var userLevel = req.query.userLevel;
+             console.log(data);
+           for (let i = 0; i < data.length; i++) {
+             category = data[i].category;
+             incomeFrom = data[i].incomeFrom;
+             incomeTo = data[i].incomeTo;
+             calFirst = data[i].calFirst;
+             calNext = data[i].calNext;
+             rate = data[i].rate;
+             tax = data[i].tax;
+             nextTax = data[i].nextTax;
+             companyID=data[i].companyID;
+
+
+             dbquery = "INSERT INTO incomeTax (companyID, category, incomeFrom, incomeTo, calFirst, calNext, rate,tax,nextTax, year, date_created) VALUE('"+ companyID +"','"+ category + "', '"+ incomeFrom + "', '"+ incomeTo + "', '"+ calFirst + "', '"+ calNext + "', '"+rate+"', '"+tax+"', '"+nextTax+"', '"+year+"', CURDATE())"
+
+            console.log(dbquery);
+                 db.query(dbquery, function(err, row) {
+
+                                     if (err) {
+
+                                  console.log("Income Tax update fail "+err);
+                                      //res.sendStatus(500);
+                                     //   return;
+                                      } else {
+                                       console.log("New Income Tax created")
+                                      }
+
+                                  });
+
+
+          }
+           db.end();
+          });
+
           app.get("/taxVerify", function(req, res, next) {
             var companyID = req.query.companyID;
             var taxID = req.query.taxID;
@@ -3683,6 +3810,9 @@ app.post("/productData", function(req, res, next) {
                  if (sumBalance === null) {
                      sumBalance =0;
                  }
+                 if (opBalance === null) {
+                     opBalance =0;
+                 }
                 // sumBalance = opBalance+sumBalance;
                 // sun console.log("Type: "+(typeof sumBalance));
                 // opBalance = curBalance;
@@ -3711,7 +3841,7 @@ app.post("/productData", function(req, res, next) {
          results[0].opBal=opBalance+sumBalance;
          results[0].curBal= (opBalance+sumBalance)+results[0].drAmt-results[0].crAmt;
          curBalance = results[0].curBal;
-
+          console.log('opBal : '+results[0].opBal);
          for (let i = 1; i < results.length; i++) {
 
                results[i].curBal = curBalance+results[i].drAmt-results[i].crAmt;
@@ -3719,7 +3849,7 @@ app.post("/productData", function(req, res, next) {
                results[i].opBal = 0;
              // else {
 
-             // console.log(i+" : "+curBalance);
+            //  console.log(typeof results[i].opBal);
          }
 
             res.send(results);

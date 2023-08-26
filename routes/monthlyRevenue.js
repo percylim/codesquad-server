@@ -42,8 +42,8 @@ router.get('/', function(req, res, next) {
         if (err) throw err;
         console.log(" SQL Connected!");
         });
-
-           sql="SELECT * from glAccount where companyID = '"+companyID+"' order by glNo, glSub";
+// load sales: type 202 and return inward : 203
+           sql="SELECT * from glAccount where companyID = '"+companyID+"' and (glType='201' or glType='203' or glType='205')  order by glType";
           // console.log(req.beforeDestroy() {
          console.log(sql);
           // },);
@@ -55,7 +55,7 @@ router.get('/', function(req, res, next) {
            }else{
             const glData=results;
         //   console.log('Generl Ledger fetched successfully');
-        //  console.log(glData.length);
+          console.log(glData);
         for (let j = 0; j < glData.length; j++) {
       //    if (glData[j].opBalance <0) {
     //          debit=glData[j].opBalance;
@@ -87,7 +87,7 @@ router.get('/', function(req, res, next) {
                         if(err){
                           console.log('Error while sum Journal Record, err');
                          // results(null,err);
-                         res.send(alert('fail to sum Journal record'));
+                      //   res.send(alert('fail to sum Journal record'));
                         }else{
 
                             if (results.length>0) {
@@ -138,8 +138,9 @@ router.get('/', function(req, res, next) {
                             // curBalance = results[i].curBal;
                              results[i].opBal = 0;
                              drAmount+=results[i].drAmt;
-                             crAmount+=results[i].crAmt;
-                           // else {
+                             crAmount+=Math.abs(results[i].crAmt);
+                           // else { totalDebit+=res.data[x].debit;
+
 
                             // console.log(glNo+' -'+glSub+" : "+curBalance);
                           }
@@ -179,17 +180,18 @@ if (j === glData.length -1) {
 
 
 //********************
-     //console.log(data);
-  //   if (j === glData.length-1) {
-    //   console.log(glData);
-//     }
-//console.log(glData.length+' < '+j+' : '+glData[j].glNo+' - '+glData[j].glSub);
+
 } // for j
 
 
 } // for j
   //  console.log(data);
 }); // con.query on glAccount
+
+
+
+
+
 
 });
 

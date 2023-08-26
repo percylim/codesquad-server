@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
     var companyID = req.body.companyID;
     var productID = req.body.productID;
     var newOpBalance = req.body.opBalance;
-
+    var cost = req.body.cost;
 
     var dbquery = ''
 
@@ -68,7 +68,7 @@ router.post('/', function(req, res, next) {
 
   console.log(newOpBalance);
 
-  dbquery = "UPDATE product SET opBalance='"+NewOpBal+"' where productID='"+ productID +"'";
+  dbquery = "UPDATE product SET opBalance='"+NewOpBal+"', cost='"+cost+"' where productID='"+ productID +"'";
 
  console.log(dbquery);
                           con.query(dbquery, function(err, row) {
