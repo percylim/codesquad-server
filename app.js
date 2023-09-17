@@ -66,6 +66,18 @@ var PNLCostOfSalesRouter = require('./routes/PNLCostOfSales');
 var PNLExpensesRouter = require('./routes/PNLExpenses');
 var balanceSheetRouter = require('./routes/balanceSheet');
 var incomeTaxUpdateRouter = require('./routes/incomeTaxUpdate');
+var trialBalanceUpdateRouter = require('./routes/trialBalanceUpdate');
+var profitAndLossUpdateRouter = require('./routes/profitAndLossUpdate');
+var fixedAssetRouter = require('./routes/fixedAsset');
+var currentAssetRouter = require('./routes/currentAsset');
+var accountReceivableRouter = require('./routes/accountReceivable');
+var closingStockRouter = require('./routes/closingStock');
+var intangibleAssetRouter = require('./routes/intangibleAsset');
+var otherAssetRouter = require('./routes/otherAsset');
+var currentLiabilityRouter = require('./routes/currentLiability');
+var accountPayableRouter = require('./routes/accountPayable');
+var longTermLiabilityRouter = require('./routes/longTermLiability');
+var ownerEquityRouter = require('./routes/ownerEquity');
 
 // upload = multer({dest: 'uploads/'});
 // var homeRouter = require("./routes/sidebar");
@@ -173,6 +185,18 @@ app.use("/PNLCostOfSales", PNLCostOfSalesRouter);
 app.use("/PNLExpenses", PNLExpensesRouter);
 app.use("/balanceSheet", balanceSheetRouter);
 app.use("/incomeTaxUpdate", incomeTaxUpdateRouter);
+app.use("/trialBalanceUpdate", trialBalanceUpdateRouter);
+app.use("/profitAndLossUpdate", profitAndLossUpdateRouter);
+app.use("/fixedAsset", fixedAssetRouter);
+app.use("/currentAsset", currentAssetRouter);
+app.use("/accountReceivable", accountReceivableRouter);
+app.use("/closingStock", closingStockRouter);
+app.use("/intangibleAsset", intangibleAssetRouter);
+app.use("/otherAsset", otherAssetRouter);
+app.use("/currentLiability", currentLiabilityRouter);
+app.use("/accountPayable", accountPayableRouter);
+app.use("/longTermLiability", longTermLiabilityRouter);
+app.use("/ownerEquity", ownerEquityRouter);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -4817,16 +4841,348 @@ if (voucherData[i].voucherNo !==undefined) {
 
 
 });
-/*
-app.post("/purchaseInvoice", function(req, res, next) {
-   var invData = req.body;
-//console.log('axios post to purhcase Invoice');
-   console.log(invData) ;
-   console.log(invData[0].productID);
-   //console.log(err.message);
-});
-*/
+app.get("/trialBalanceSearch", function(req, res, next) {
+  var companyID = req.query.companyID;
+  var year = req.query.year;
+//  console.log(companyID);
+//  console.log(employeeNo);
+  var db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  timezone : "+00:00",
+});  // ale/  var userLevel = req.query.userLevel;
 
+  //console.log('req.body here -> ', categoryID);
+  var sql="SELECT * from trialBalance where companyID = '"+companyID+"' and year = '"+ year +"'";
+    // console.log(req.beforeDestroy() {
+   console.log(sql);
+    // },);
+  db.query(sql, function (err, results, fields) {
+   if(err){
+     console.log('Error while fetching Trial Balance Record, err');
+    // results(null,err);
+    return alert("Trial Balance load data fail");
+
+  }else{
+
+
+     console.log('Trial Balance search successfully');
+      console.log(results);
+         res.send(results);
+
+     //results(null,res);
+  }
+     db.end();
+
+
+
+  });
+  });
+
+  app.post("/trialBalanceDelete", function(req, res, next) {
+     var companyID = req.body.companyID;
+     var year = req.body.year;
+    // console.log(employeeNo);
+     var db = mysql.createConnection({
+     host: process.env.DB_HOST,
+     user: process.env.DB_USER,
+     password: process.env.DB_PASSWORD,
+     database: process.env.DB_NAME,
+     timezone : "+00:00",
+   });  // ale/  var userLevel = req.query.userLevel;
+
+     var sql="DELETE from trialBalance where companyID = '"+companyID+"' AND year='"+ year +"'" ;
+       // console.log(req.beforeDestroy() {
+      console.log(sql);
+       // },);
+     db.query(sql, function (err, results, fields) {
+      if(err){
+        console.log('Error while delete trial Balance Record, err');
+    // return(alert("fail delete Trial Balance"));
+      }else{
+
+
+        console.log('Trial Balance successfully deleted');
+      //res.send("success");
+        //results(null,res);
+     }
+     db.end();
+  })
+  });
+
+  app.get("/profitAndLossSearch", function(req, res, next) {
+    var companyID = req.query.companyID;
+    var year = req.query.year;
+  //  console.log(companyID);
+  //  console.log(employeeNo);
+    var db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    timezone : "+00:00",
+  });  // ale/  var userLevel = req.query.userLevel;
+
+    //console.log('req.body here -> ', categoryID);
+    var sql="SELECT * from profitAndLoss where companyID = '"+companyID+"' and year = '"+ year +"'";
+      // console.log(req.beforeDestroy() {
+     console.log(sql);
+      // },);
+    db.query(sql, function (err, results, fields) {
+     if(err){
+       console.log('Error while fetching Profit And Loss Record, err');
+      // results(null,err);
+      return alert("Profit And Loss load data fail");
+
+    }else{
+
+
+       console.log('Profit And Loss search successfully');
+        console.log(results);
+           res.send(results);
+
+       //results(null,res);
+    }
+       db.end();
+
+
+
+    });
+    });
+
+
+  app.post("/profitAndLossDelete", function(req, res, next) {
+     var companyID = req.body.companyID;
+     var year = req.body.year;
+    // console.log(employeeNo);
+     var db = mysql.createConnection({
+     host: process.env.DB_HOST,
+     user: process.env.DB_USER,
+     password: process.env.DB_PASSWORD,
+     database: process.env.DB_NAME,
+     timezone : "+00:00",
+   });  // ale/  var userLevel = req.query.userLevel;
+
+     var sql="DELETE from profitAndLoss where companyID = '"+companyID+"' AND year='"+ year +"'" ;
+       // console.log(req.beforeDestroy() {
+      console.log(sql);
+       // },);
+     db.query(sql, function (err, results, fields) {
+      if(err){
+        console.log('Error while delete Profit And Loss Record, err');
+     return;
+      }else{
+
+
+        console.log('Profit And Loss successfully deleted');
+      //res.send("success");
+        //results(null,res);
+     }
+
+     db.end();
+  })
+
+  });
+
+  app.post("/incomeSummaryDelete", function(req, res, next) {
+     var companyID = req.body.companyID;
+     var year = req.body.year;
+
+
+     console.log(req.body);
+     var db = mysql.createConnection({
+     host: process.env.DB_HOST,
+     user: process.env.DB_USER,
+     password: process.env.DB_PASSWORD,
+     database: process.env.DB_NAME,
+     timezone : "+00:00",
+   });  // ale/  var userLevel = req.query.userLevel;
+
+     var sql="DELETE from incomeSummary where companyID = '"+companyID+"' AND year='"+ year +"'" ;
+       // console.log(req.beforeDestroy() {
+      console.log(sql);
+       // },);
+     db.query(sql, function (err, results, fields) {
+      if(err){
+        console.log('Error while delete Income Summary Record, err');
+     return(alert("fail To Delete Income Summary"));
+      }else{
+
+
+        console.log('Income Summary successfully deleted');
+      //res.send("success");
+        //results(null,res);
+     }
+
+     db.end();
+  })
+
+  });
+
+  app.get("/loadIncomeSummary", function(req, res, next) {
+    var companyID = req.query.companyID;
+    var year = req.query.year;
+  //  console.log(companyID);
+  //  console.log(employeeNo);
+    var db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    timezone : "+00:00",
+  });  // ale/  var userLevel = req.query.userLevel;
+
+    //console.log('req.body here -> ', categoryID);
+    var sql="SELECT * from incomeSummary where companyID = '"+companyID+"' and year = '"+ year +"'";
+      // console.log(req.beforeDestroy() {
+     console.log(sql);
+      // },);
+    db.query(sql, function (err, results, fields) {
+     if(err){
+       console.log('Error while fetching Income Summary Record, err');
+      // results(null,err);
+      return;
+
+    }else{
+
+
+       console.log('Income Summary Load successfully');
+        console.log(results);
+           res.send(results);
+
+       //results(null,res);
+    }
+       db.end();
+
+
+
+    });
+    });
+
+  app.post("/incomeSummary", function(req, res, next) {
+     var companyID = req.body.companyID;
+     var year = req.body.year;
+     var startDate = req.body.startDate;
+     var endDate = req.body.endDate;
+     var beforeTax = req.body.beforeTax;
+     var tax = req.body.tax ;
+     var afterTax = req.body.afterTax;
+    // console.log(employeeNo);
+     var db = mysql.createConnection({
+     host: process.env.DB_HOST,
+     user: process.env.DB_USER,
+     password: process.env.DB_PASSWORD,
+     database: process.env.DB_NAME,
+     timezone : "+00:00",
+   });  // ale/  var userLevel = req.query.userLevel;
+
+     var sql="INSERT INTO incomeSummary (companyID, year, startDate, endDate, beforeTax, tax, afterTax, date_created) VALUE('" + companyID + "', '"+ year + "', '"+startDate+"', '"+endDate+"', '"+ beforeTax+ "', '"+ tax + "', '"+ afterTax + "', CURDATE())";
+       // console.log(req.beforeDestroy() {
+      console.log(sql);
+       // },);
+     db.query(sql, function (err, results, fields) {
+      if(err){
+        console.log('Error while Insert Record, err');
+     return;
+      }else{
+
+
+        console.log('Income SUmmary successfully inserted');
+      //res.send("success");
+        //results(null,res);
+     }
+
+     db.end();
+  })
+
+  });
+
+  app.post("/balanceSheetDelete", function(req, res, next) {
+     var companyID = req.body.companyID;
+     var year = req.body.year;
+
+
+     console.log(req.body);
+     var db = mysql.createConnection({
+     host: process.env.DB_HOST,
+     user: process.env.DB_USER,
+     password: process.env.DB_PASSWORD,
+     database: process.env.DB_NAME,
+     timezone : "+00:00",
+   });  // ale/  var userLevel = req.query.userLevel;
+
+     var sql="DELETE from balanceSheet where companyID = '"+companyID+"' AND year='"+ year +"'" ;
+       // console.log(req.beforeDestroy() {
+      console.log(sql);
+       // },);
+     db.query(sql, function (err, results, fields) {
+      if(err){
+        console.log('Error while delete Balance Sheet Record, err');
+     return(alert("fail To Delete Balance Sheet"));
+      }else{
+
+
+        console.log('IBalance Sheet successfully deleted');
+      //res.send("success");
+        //results(null,res);
+     }
+
+     db.end();
+  })
+
+  });
+
+app.post("/balanceSheetUpdate", function(req, res, next) {
+  var BSData = req.body
+  var companyID = BSData[0].companyID;
+  var eDate = new Date(BSData[0].endDate);
+  var year = eDate.getFullYear();
+console.log(BSData);
+console.log(year);
+
+//  console.log(req.body.password+req.body.adminName+req.body.companyID+ " "+ md5Password);
+ var dbquery = ''
+
+
+
+ var con = mysql.createConnection({
+   host: process.env.DB_HOST,
+   user: process.env.DB_USER,
+   password: process.env.DB_PASSWORD,
+   database: process.env.DB_NAME,
+   timezone : "+00:00",
+ });
+
+ con.connect(function(err) {
+       if (err) throw err;
+       console.log("Connected!");
+       });
+
+    for (let i = 0; i < BSData.length; i++) {
+   dbquery = "INSERT INTO balanceSheet (companyID, year, startDate, endDate, addNo, glName, totalText, amount, PNLType, date_close, date_created) VALUE('" + companyID + "', '"+ year + "', '"+BSData[i].startDate+"', '"+BSData[i].endDate+"', '"+ BSData[i].addNo+ "', '"+BSData[i].glName+"', '"+BSData[i].totalText+"', '"+BSData[i].amount+"', '"+BSData[i].PNLType+"', CURDATE(),  CURDATE())";
+
+   console.log(dbquery);
+                           con.query(dbquery, function(err, row) {
+
+                           if (err) {
+                             //console.log(err.message);
+                             console.log(err);
+                        
+                            } else {
+                             console.log("New Balance Sheet created")
+                            }
+
+                        });
+
+         } //for
+
+         con.end();
+         return(alert('Profit And Loss Statement Saved'));
+
+
+});
 
 
 
