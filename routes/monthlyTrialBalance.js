@@ -93,7 +93,8 @@ router.get('/', function(req, res, next) {
                             if (results.length>0) {
                                 curBalance = opBalance+results[0].sumBalance;
                                 sumBalance=results[0].sumBalance;
-                               //  console.log("first Sumbalance: "+sumBalance);
+                                 console.log("first Sumbalance: "+sumBalance);
+                                 console.log('curBalance: '+curBalance)
                              } else {
 
                                 curBalance = opBalance;
@@ -144,7 +145,7 @@ router.get('/', function(req, res, next) {
                             // console.log(glNo+' -'+glSub+" : "+curBalance);
                           }
                             finBalance=glData[j].opBalance+sumBalance+drAmount-crAmount;
-                          //  console.log('last curBalance: '+curBalance);
+                            console.log('last finBalance: '+finBalance);
                             if (finBalance > 0 ) {
                                 debit=finBalance;
                                 credit=0;
@@ -158,10 +159,10 @@ router.get('/', function(req, res, next) {
 
                       } else {  // if not found
                          if (glData[j].opBalance > 0) {
-                           glData[j].debit = glData[j].opBalance;
+                           glData[j].debit = glData[j].opBalance+sumBalance;
                             glData[j].credit =0;
                          } else {
-                           glData[j].credit=glData[j].opBalance;
+                           glData[j].credit=glData[j].opBalance+sumBalance;
                            glData[j].debit=0;
                          }
                       }
@@ -171,7 +172,10 @@ router.get('/', function(req, res, next) {
 //console.log(glData.length+' < '+j+' : '+glData[j].glNo+' - '+glData[j].glSub);
                   //  con.end();
 if (j === glData.length -1) {
-    console.log(glData);
+  //   console.log(glData);
+
+  //  glData.push(glData[j])
+//    console.log(j+' = '+glData.length);
      res.send(glData);
 }
 
@@ -189,6 +193,7 @@ if (j === glData.length -1) {
 
 } // for j
   //  console.log(data);
+  con.end();
 }); // con.query on glAccount
 
 });

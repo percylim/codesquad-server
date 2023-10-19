@@ -169,7 +169,7 @@ console.log(dbquery);
 
   // add taxTxn if is not free of tax
   if (taxType !=="FOT") {
-  dbquery = "INSERT INTO taxTxn (companyID, taxID, taxType, taxCode, taxDescription, remark, itemAmount, taxRate, taxAmount, suppCustID, documentNo, documentType, document_date, date_created) VALUE('" + companyID + "', '"+ taxID + "', '"+ taxType + "', '"+ taxCode + "', '"+ taxDescription + "', '"+remark+"', '"+itemTotal+"', '"+taxRate+"', '"+itemTax+"', '"+supplierID+"', '"+invoiceNo+"', 'PUR', '"+txnDate+"', CURDATE())"
+  dbquery = "INSERT INTO taxTxn (companyID, taxID, taxType, taxCode, taxDescription, remark, itemAmount, taxRate, taxAmount, suppCustID, documentNo, documentType, document_date, date_created) VALUE('" + companyID + "', '"+ taxID + "', '"+ taxType + "', '"+ taxCode + "', '"+ taxDescription + "', '"+remark+"', '"+itemTotal+"', '"+taxRate+"', '"+itemTax+"', '"+supplierName+"', '"+invoiceNo+"', 'PUR', '"+txnDate+"', CURDATE())"
 
   console.log(dbquery);
       con.query(dbquery, function(err, row) {

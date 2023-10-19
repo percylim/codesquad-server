@@ -185,6 +185,7 @@ if (j === glData.length -1) {
 
 
 } // for j
+con.end();
   //  console.log(data);
 }); // con.query on glAccount
 

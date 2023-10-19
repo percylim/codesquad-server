@@ -5,6 +5,7 @@ var path = require("path");
 var ejs = require("ejs");
 var cookieParser = require("cookie-parser");
 var session = require('express-session');
+var MemoryStore = require('memorystore')(session)
 var passport = require("passport");
 var logger = require("morgan");
 var cors = require("cors");
@@ -72,6 +73,7 @@ var fixedAssetRouter = require('./routes/fixedAsset');
 var currentAssetRouter = require('./routes/currentAsset');
 var accountReceivableRouter = require('./routes/accountReceivable');
 var closingStockRouter = require('./routes/closingStock');
+var closingStockBeforeYearRouter = require('./routes/closingStockBeforeYear');
 var intangibleAssetRouter = require('./routes/intangibleAsset');
 var otherAssetRouter = require('./routes/otherAsset');
 var currentLiabilityRouter = require('./routes/currentLiability');
@@ -116,6 +118,7 @@ const pool = mysql.createPool({
 // view engine setup
 //app.use(express.static("public"));
 app.set("views", path.join(__dirname, "views"));
+app.set("help", path.join(__dirname, "help"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
@@ -135,9 +138,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use('/uploads', express.static('uploads'));
 app.use(session({
+  store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+      }),  
   secret: "Our little secret.",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
 }));
 
 app.use("/companyRegister", companyRegisterRouter);
@@ -191,6 +197,7 @@ app.use("/fixedAsset", fixedAssetRouter);
 app.use("/currentAsset", currentAssetRouter);
 app.use("/accountReceivable", accountReceivableRouter);
 app.use("/closingStock", closingStockRouter);
+app.use("/closingStockBeforeYear", closingStockBeforeYearRouter);
 app.use("/intangibleAsset", intangibleAssetRouter);
 app.use("/otherAsset", otherAssetRouter);
 app.use("/currentLiability", currentLiabilityRouter);
@@ -285,7 +292,7 @@ app.post("/bankReconDelete", function(req, res, next) {
    res.send("Bank Reconciliation for Bank: "+bankID+" at "+txnDate+" successfully deleted");
     //results(null,res);
  }
-//   db.end();
+   db.end();
 });
 });
 
@@ -317,7 +324,7 @@ app.post("/bankReconDelete", function(req, res, next) {
        res.send("success");
         //results(null,res);
      }
-  //   db.end();
+     db.end();
 })
 });
 
@@ -354,51 +361,14 @@ app.post("/bankReconDelete", function(req, res, next) {
 
        //results(null,res);
     }
-    // db.end();
+     db.end();
 
 
 
     });
     });
 
-    app.get("/userSearch", function(req, res, next) {
-      var companyID = req.query.companyID;
-      var employeeNo = req.query.employeeNo;
-      console.log(companyID);
-      console.log(employeeNo);
-      var db = mysql.createConnection({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      timezone : "+00:00",
-    });  // ale/  var userLevel = req.query.userLevel;
 
-      //console.log('req.body here -> ', categoryID);
-      var sql="SELECT * from employee where companyID = '"+companyID+"' and employeeNo = '"+ employeeNo +"'";
-        // console.log(req.beforeDestroy() {
-       console.log(sql);
-        // },);
-      db.query(sql, function (err, results, fields) {
-       if(err){
-         console.log('Error while fetching employee Record, err');
-        // results(null,err);
-        res.send(alert("employee load data fail"));
-      }else{
-
-
-         console.log('Employee search successfully');
-          console.log(results);
-             res.send(results);
-
-         //results(null,res);
-      }
-  //     db.end();
-
-
-
-      });
-      });
 
     app.get("/customerList", function(req, res, next) {
       var companyID = req.query.companyID;
@@ -442,7 +412,7 @@ app.post("/bankReconDelete", function(req, res, next) {
          //results(null,res);
       }
 
-  //     db.end();
+       db.end();
 
 
       });
@@ -484,7 +454,7 @@ app.post("/bankReconDelete", function(req, res, next) {
            //results(null,res);
         }
 
-    //     db.end();
+         db.end();
 
 
         });
@@ -514,7 +484,6 @@ app.post("/bankReconDelete", function(req, res, next) {
           // results(null,err);
           res.send(alert("fail to search supplier/Customer data "));
         }else{
-
            console.log('Customer/Supplier search successfully');
           console.log(results);
                res.send(results);
@@ -523,7 +492,7 @@ app.post("/bankReconDelete", function(req, res, next) {
            //results(null,res);
         }
 
-      //   db.end();
+         db.end();
 
 
         });
@@ -571,7 +540,7 @@ app.post("/bankReconDelete", function(req, res, next) {
            //results(null,res);
         }
 
-      //   db.end();
+         db.end();
 
 
         });
@@ -610,7 +579,7 @@ app.post("/bankReconDelete", function(req, res, next) {
         }
 
 
-    //      db.end();
+          db.end();
 
         });
         });
@@ -657,7 +626,7 @@ app.post("/bankReconDelete", function(req, res, next) {
                //results(null,res);
             }
 
-        //     db.end();
+             db.end();
 
 
             });
@@ -706,7 +675,7 @@ app.post("/bankReconDelete", function(req, res, next) {
                  //results(null,res);
               }
 
-            //     db.end();
+                 db.end();
 
 
               });
@@ -755,7 +724,7 @@ app.post("/bankReconDelete", function(req, res, next) {
 
       res.send(null);
      }
-  //   db.end();
+     db.end();
      });
     });
 
@@ -803,7 +772,7 @@ app.post("/bankReconDelete", function(req, res, next) {
 
           res.send(null);
          }
-    //      db.end();
+          db.end();
          });
         });
 
@@ -849,7 +818,7 @@ app.post("/bankReconDelete", function(req, res, next) {
 
             res.send(null);
            }
-      //     db.end();
+           db.end();
            });
           });
 
@@ -895,7 +864,7 @@ app.post("/bankReconDelete", function(req, res, next) {
 
             res.send(null);
            }
-      //     db.end();
+           db.end();
            });
           });
 
@@ -942,7 +911,7 @@ app.post("/bankReconDelete", function(req, res, next) {
 
               res.send(null);
              }
-        //      db.end();
+              db.end();
              });
             });
 
@@ -1016,7 +985,7 @@ app.post("/bankReconDelete", function(req, res, next) {
 
            }
 
-          // con.end();
+           con.end();
 
 
     });
@@ -1064,7 +1033,7 @@ app.post("/bankReconDelete", function(req, res, next) {
 
            }
 
-    //       con.end();
+           con.end();
 
 
     });
@@ -1181,10 +1150,51 @@ app.post("/bankReconDelete", function(req, res, next) {
       }
 
 
-    //  db.end();
+      db.end();
 
       });
       });
+
+      app.get("/ApArGlList", function(req, res, next) {
+        var companyID = req.query.companyID;
+        var db = mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        timezone : "+00:00",
+      });  // ale/  var userLevel = req.query.userLevel;
+        console.log(companyID);
+      //  console.log(host);
+      //  console.log(user);
+    //    console.log(password);
+    //    console.log(database);
+        // console.log(userLevel);
+        //console.log('req.body here -> ', categoryID);
+        var sql="SELECT * from glAccount where companyID = '"+companyID+"' AND (glType='801' OR glType='802') order by glNo";
+          // console.log(req.beforeDestroy() {
+         console.log(sql);
+          // },);
+        db.query(sql, function (err, results, fields) {
+         if(err){
+           console.log('Error while fetching General Ledger Record, err');
+          // results(null,err);
+          res.send(alert('fail to load General Ledger data'));
+        }else{
+
+
+           console.log('Generl Ledger fetched successfully');
+          console.log(results);
+               res.send(results);
+
+           //results(null,res);
+        }
+
+
+        db.end();
+
+        });
+        });
       app.get("/salesGlList", function(req, res, next) {
         var companyID = req.query.companyID;
         var db = mysql.createConnection({
@@ -1201,7 +1211,7 @@ app.post("/bankReconDelete", function(req, res, next) {
       //    console.log(database);
         // console.log(userLevel);
         //console.log('req.body here -> ', categoryID);
-        var sql="SELECT * from glAccount where companyID = '"+companyID+"' AND (glType='401' OR glType='501' OR glType='201' OR glType='301') order by glNo";
+        var sql="SELECT * from glAccount where companyID = '"+companyID+"' AND (glType='401' OR glType='301' OR glType='302' OR glType='303' OR glType='304' OR glType='201' OR glType='801' OR glType='802') order by glNo";
           // console.log(req.beforeDestroy() {
          console.log(sql);
           // },);
@@ -1263,7 +1273,7 @@ app.post("/bankReconDelete", function(req, res, next) {
         }
 
 
-        //db.end();
+        db.end();
 
         });
         });
@@ -1346,7 +1356,7 @@ app.get("/glSelectList", function(req, res, next) {
                     }
 
 
-                  //  db.end();
+                    db.end();
 
                     });
                     });
@@ -1422,7 +1432,7 @@ app.get("/glSelectList", function(req, res, next) {
            //results(null,res);
         }
 
-    //   con.end();
+       con.end();
 
 
         });
@@ -2628,7 +2638,7 @@ app.post("/productData", function(req, res, next) {
        }
 
 
-//    db.end();
+   db.end();
 
 
     });
@@ -2675,7 +2685,7 @@ app.post("/productData", function(req, res, next) {
              }
 
 
-      //    db.end();
+          db.end();
 
 
           });
@@ -2714,7 +2724,7 @@ app.post("/productData", function(req, res, next) {
                  }
 
 
-    //          db.end();
+              db.end();
 
 
               });
@@ -2800,13 +2810,8 @@ app.post("/productData", function(req, res, next) {
 
                   }
                   db.end()
-                })
+                });
 
-
-
-              //    db.end();
-
-            //     });
 
                   });
 
@@ -3220,7 +3225,7 @@ app.post("/productData", function(req, res, next) {
 
                      }
 
-        //          db.end();
+                  db.end();
 
                   });
                   });
@@ -3720,53 +3725,7 @@ app.post("/productData", function(req, res, next) {
                                     }
                                     db.end()
                                 });
-         /*
-                                // Load Journal Transaction record ****
-                                sql="SELECT * from journal where companyID = '"+companyID+"' and glNo='"+glNo+"' and glSub='"+glSub+"' and txnDate>='"+startDate+"' and txnDate<='"+ endDate +"' order by txnDate, voucherNo ASC";
-                            //  var sql="SELECT * from journal where companyID = '"+companyID+"' order by txnDate ASC";
-                                // console.log(req.beforeDestroy() {
-                               console.log(sql);
-                                // },);
-                              db.query(sql, function (err, results, fields) {
-                               if(err){
-                                 console.log('Error while fetching Journal Record, err');
-                                // results(null,err);
-                                res.send(alert('fail to load Journal record'));
-                               }else{
 
-                                   if (results.length>0) {
-                                      console.log(results);
-                            //          results[0].opBal=opBalance+sumBalance;
-                                 results[0].opBal=opBalance+sumBalance;
-                                 results[0].curBal= (opBalance+sumBalance)+results[0].drAmt-results[0].crAmt;
-                                 curBalance = results[0].curBal;
-
-                                 for (let i = 1; i < results.length; i++) {
-
-                                       results[i].curBal = curBalance+results[i].drAmt-results[i].crAmt;
-                                       curBalance = results[i].curBal;
-                                       results[i].opBal = 0;
-                                     // else {
-
-                                     // console.log(i+" : "+curBalance);
-                                 }
-
-                                    res.send(results);
-                                    } else {
-
-                                    res.send(alert('No records between '+startDate+' and '+endDate));
-                                    }
-
-
-                                 //results(null,res);
-                                 }
-
-
-                            //    db.end();
-
-
-                              });
-                          */
                               });
 
 
@@ -4005,7 +3964,7 @@ app.post("/productData", function(req, res, next) {
            }
 
 
-    //    db.end();
+        db.end();
 
 
         });
@@ -4477,7 +4436,8 @@ for (let i = 0; i < voucherData.length; i++) {
       } // 2  to level
 
    res.send("Success");
-   con.end()
+
+
  });
 
 
@@ -4836,7 +4796,7 @@ if (voucherData[i].voucherNo !==undefined) {
 
           };  //query
         res.send("Success");
-    //    con.end()
+        con.end()
    }); // db.connect
 
 
@@ -5012,7 +4972,7 @@ app.get("/trialBalanceSearch", function(req, res, next) {
 
 
         console.log('Income Summary successfully deleted');
-      //res.send("success");
+      res.send("success");
         //results(null,res);
      }
 
@@ -5089,8 +5049,8 @@ app.get("/trialBalanceSearch", function(req, res, next) {
       }else{
 
 
-        console.log('Income SUmmary successfully inserted');
-      //res.send("success");
+        console.log('Income Summary successfully inserted');
+      res.send("success");
         //results(null,res);
      }
 
@@ -5169,7 +5129,7 @@ console.log(year);
                            if (err) {
                              //console.log(err.message);
                              console.log(err);
-                        
+
                             } else {
                              console.log("New Balance Sheet created")
                             }
@@ -5179,11 +5139,320 @@ console.log(year);
          } //for
 
          con.end();
-         return(alert('Profit And Loss Statement Saved'));
+         return(alert('Balance Sheet Saved'));
 
 
 });
 
+app.get("/yearlyTrialBalance", function(req, res, next) {
+  var companyID = req.query.companyID;
+  var year = req.query.year;
+//  console.log(companyID);
+//  console.log(employeeNo);
+  var db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  timezone : "+00:00",
+});  // ale/  var userLevel = req.query.userLevel;
+
+  //console.log('req.body here -> ', categoryID);
+  var sql="SELECT * from trialBalance where companyID = '"+companyID+"' and year = '"+ year +"'";
+    // console.log(req.beforeDestroy() {
+   console.log(sql);
+    // },);
+  db.query(sql, function (err, results, fields) {
+   if(err){
+     console.log('Error while fetching Yearly Trial Balance Record, err');
+    // results(null,err);
+    return;
+
+  }else{
+
+
+     console.log('Yearly Trial Balance Load successfully');
+      console.log(results);
+         res.send(results);
+
+     //results(null,res);
+  }
+     db.end();
+
+
+
+  });
+  });
+
+  app.get("/yearlyProfitAndLoss", function(req, res, next) {
+    var companyID = req.query.companyID;
+    var year = req.query.year;
+  //  console.log(companyID);
+  //  console.log(employeeNo);
+    var db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    timezone : "+00:00",
+  });  // ale/  var userLevel = req.query.userLevel;
+
+    //console.log('req.body here -> ', categoryID);
+    var sql="SELECT * from profitAndLoss where companyID = '"+companyID+"' and year = '"+ year +"'";
+      // console.log(req.beforeDestroy() {
+     console.log(sql);
+      // },);
+    db.query(sql, function (err, results, fields) {
+     if(err){
+       console.log('Error while fetching Yearly Trial Profit And Loss Record, err');
+      // results(null,err);
+      return;
+
+    }else{
+
+
+       console.log('Yearly Profit And Loss Load successfully');
+        console.log(results);
+           res.send(results);
+
+       //results(null,res);
+    }
+       db.end();
+
+
+
+    });
+    });
+    app.get("/yearlyBalanceSheet", function(req, res, next) {
+      var companyID = req.query.companyID;
+      var year = req.query.year;
+    //  console.log(companyID);
+    //  console.log(employeeNo);
+      var db = mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      timezone : "+00:00",
+    });  // ale/  var userLevel = req.query.userLevel;
+
+      //console.log('req.body here -> ', categoryID);
+      var sql="SELECT * from balanceSheet where companyID = '"+companyID+"' and year = '"+ year +"'";
+        // console.log(req.beforeDestroy() {
+       console.log(sql);
+        // },);
+      db.query(sql, function (err, results, fields) {
+       if(err){
+         console.log('Error while fetching Yearly Balance Sheet Record, err');
+        // results(null,err);
+        return;
+
+      }else{
+
+
+         console.log('Yearly Balance Sheet Load successfully');
+          console.log(results);
+             res.send(results);
+
+         //results(null,res);
+      }
+         db.end();
+
+
+
+      });
+      });
+
+      app.get("/GSTPeriodicalReport", function(req, res, next) {
+        var companyID = req.query.companyID;
+        var startDate = req.query.startDate;
+        var endDate = req.query.endDate;
+        var custData=[];
+      //  console.log(companyID);
+      //  console.log(employeeNo);
+        var db = mysql.createConnection({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        timezone : "+00:00",
+      });  // ale/  var userLevel = req.query.userLevel;
+
+        //console.log('req.body here -> ', categoryID);
+        var sql="SELECT * from taxTxn where companyID = '"+companyID+"' and document_date >= '"+ startDate +"' and document_date<= '"+endDate+"' order by document_date";
+          // console.log(req.beforeDestroy() {
+         console.log(sql);
+          // },);
+        db.query(sql, function (err, results, fields) {
+         if(err){
+           console.log('Error while fetching GST Transaction Record, err');
+          // results(null,err);
+          return;
+
+        }else{
+      //    custData=results
+          console.log(results);
+       console.log('GST Load successfully');
+            res.send(results);
+
+        }
+  //    });
+/*
+          for (let j = 0; j < custData.length; j++) {
+
+       sql="SELECT * from suppCustAcct where companyID = '"+companyID+"' and supplierID = '"+custData[j].suppCustID+"'";
+       db.query(sql, function (err, results, fields) {
+        if(err){
+          console.log('Error while fetching Supplier Record, err');
+         // results(null,err);
+       }else{
+      //    console.log(results);
+          custData[j].suppCustID = results[0].supplierName;
+        //    data.concat(custData);
+      //    console.log('supplier name: '+custData[j].suppCustID);
+        }
+      });
+      if (j === custData.length -1 ) {
+        console.log(custData[j].suppCustID);
+      //  res.send(custData);
+      //  db.end();
+      }
+     }   // for
+     */
+
+        //   data.push(custData);
+        //    console.log(custData);
+          //     res.send(custData);
+
+           //results(null,res);
+
+
+
+           db.end();
+
+
+
+        });
+        });
+        app.get("/GSTInputOutPutReport", function(req, res, next) {
+          var companyID = req.query.companyID;
+          var startDate = req.query.startDate;
+          var endDate = req.query.endDate;
+          var taxType = req.query.taxType;
+          var custData=[];
+        //  console.log(companyID);
+        //  console.log(employeeNo);
+          var db = mysql.createConnection({
+          host: process.env.DB_HOST,
+          user: process.env.DB_USER,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_NAME,
+          timezone : "+00:00",
+        });  // ale/  var userLevel = req.query.userLevel;
+
+          //console.log('req.body here -> ', categoryID);
+          var sql="SELECT * from taxTxn where companyID = '"+companyID+"' and taxType = '"+taxType+"' and document_date >= '"+ startDate +"' and document_date<= '"+endDate+"' order by taxCode";
+            // console.log(req.beforeDestroy() {
+           console.log(sql);
+            // },);
+          db.query(sql, function (err, results, fields) {
+           if(err){
+             console.log('Error while fetching GST Transaction Record, err');
+            // results(null,err);
+            return;
+
+          }else{
+        //    custData=results
+        //    console.log(results);
+         console.log('GST Load successfully on '+taxType);
+              res.send(results);
+
+          }
+
+
+             db.end();
+
+
+
+          });
+          });
+          app.get("/GlVoucherSearch", function(req, res, next) {
+            var companyID = req.query.companyID;
+            var glNo = req.query.glNo;
+            var glSub= req.query.glSub;
+            var db = mysql.createConnection({
+            host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            timezone : "+00:00",
+          });  // ale/  var userLevel = req.query.userLevel;
+
+            //console.log('req.body here -> ', categoryID);
+            var sql="SELECT * from journal where companyID = '"+companyID+"' and glNo = '"+glNo+"' and glSub= '"+glSub+"'";
+              // console.log(req.beforeDestroy() {
+             console.log(sql);
+              // },);
+            db.query(sql, function (err, results, fields) {
+             if(err){
+               console.log('Error while fetching GST Transaction Record, err');
+              // results(null,err);
+              return;
+
+            }else{
+          //    custData=results
+          //    console.log(results);
+      //     console.log(' Load successfully on '+taxType);
+                res.send(results);
+
+            }
+        //    });
+
+
+
+               db.end();
+
+
+
+            });
+            });
+
+            app.post("/GlDelete", function(req, res, next) {
+               var companyID = req.body.companyID;
+               var glNo = req.body.glNo;
+               var glSub = req.body.glSub;
+
+               var db = mysql.createConnection({
+               host: process.env.DB_HOST,
+               user: process.env.DB_USER,
+               password: process.env.DB_PASSWORD,
+               database: process.env.DB_NAME,
+               timezone : "+00:00",
+             });  // ale/  var userLevel = req.query.userLevel;
+
+             var sql="DELETE from glAccount where companyID = '"+companyID+"' AND glNo='"+ glNo +"' AND glSub='"+glSub+"'" ;
+               // console.log(req.beforeDestroy() {
+              console.log(sql);
+               // },);
+             db.query(sql, function (err, results, fields) {
+              if(err){
+                console.log('Error while deleting Tax Record, err');
+               res.send("fail "+err);
+              }else{
+
+
+                console.log('G/L Record delete successfully');
+
+               res.send("G/L Account : "+glNo+" - "+glSub+" successfully deleted");
+                //results(null,res);
+             }
+               db.end();
+            });
+            });
+
+            app.get("/helpPage", (req, res) => {
+              res.sendFile(__dirname + "/help/helpPage.html");
+            });
 
 
   module.exports = app;

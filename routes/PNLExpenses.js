@@ -105,7 +105,7 @@ sumBalance=0;
 
         } // if (err) else
 
-
+con.end();
 
         }); // sum expenses balance
 

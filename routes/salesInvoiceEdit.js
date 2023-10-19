@@ -251,7 +251,7 @@ console.log(dbquery);
 
   // add taxTxn
    if (taxType === 'OUTPUT') {
-  dbquery = "INSERT INTO taxTxn (companyID, taxID, taxType, taxCode, taxDescription, remark, itemAmount, taxRate, taxAmount, suppCustID, documentNo, documentType, document_date, date_created, status) VALUE('" + companyID + "', '"+ taxID + "', '"+ taxType + "', '"+ taxCode + "', '"+ taxDescription + "', '"+remark+"', '"+itemTotal+"', '"+taxRate+"', '"+taxItemTotal+"', '"+customerID+"', '"+invoiceNo+"', 'SAL', '"+txnDate+"', CURDATE(), 'EDITED')"
+  dbquery = "INSERT INTO taxTxn (companyID, taxID, taxType, taxCode, taxDescription, remark, itemAmount, taxRate, taxAmount, suppCustID, documentNo, documentType, document_date, date_created, status) VALUE('" + companyID + "', '"+ taxID + "', '"+ taxType + "', '"+ taxCode + "', '"+ taxDescription + "', '"+remark+"', '"+itemTotal+"', '"+taxRate+"', '"+taxItemTotal+"', '"+customerName+"', '"+invoiceNo+"', 'SAL', '"+txnDate+"', CURDATE(), 'EDITED')"
 
   console.log(dbquery);
 

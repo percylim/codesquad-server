@@ -84,12 +84,12 @@ router.get('/', function(req, res, next) {
                         }else{
 
                             if (results.length>0) {
-                                curBalance = opBalance+results[0].sumBalance;
+                                curBalance = glData[j].opBalance+results[0].sumBalance;
                                 sumBalance=results[0].sumBalance;
                                //  console.log("first Sumbalance: "+sumBalance);
                              } else {
 
-                                curBalance = opBalance;
+                                curBalance = glData[j].opBalance;
                                 sumBalance = 0;
                              }
                                if (sumBalance === null) {
@@ -137,8 +137,8 @@ router.get('/', function(req, res, next) {
 
                             // console.log(glNo+' -'+glSub+" : "+curBalance);
                           }
-                            finBalance=glData[j].opBalance+sumBalance+drAmount-crAmount;
-                          //  console.log('last curBalance: '+curBalance);
+                            finBalance=glData[j].opBalance+curBalance+drAmount-crAmount;
+                            console.log('last finBalance: '+finBalance);
                             if (finBalance > 0 ) {
                                 debit=finBalance;
                                 credit=0;
@@ -179,6 +179,8 @@ if (j === glData.length -1) {
 
 } // for j
   //  console.log(data);
+
+con.end();
 }); // con.query on glAccount
 
 

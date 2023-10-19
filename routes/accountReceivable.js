@@ -28,6 +28,7 @@ router.get('/', function(req, res, next) {
   var crAmount=0;
   var finBalance =0;
   var dbquery = ''
+  var JnSumBal =0;
   //const [glData, setGlData]=useState([]);
 
 
@@ -44,7 +45,7 @@ router.get('/', function(req, res, next) {
         console.log(" SQL Connected!");
         });
 // load sales: type 202 and return inward : 203
-           sql="SELECT * from glAccount where companyID = '"+companyID+"' and glType='802'  order by glNo, glSub";
+           sql="SELECT * from glAccount where companyID = '"+companyID+"' and (glType='802' or glType='203')  order by glNo, glSub";
           // console.log(req.beforeDestroy() {
          console.log(sql);
           // },);
@@ -56,19 +57,20 @@ router.get('/', function(req, res, next) {
            }else{
             const glData=results;
         //   console.log('Generl Ledger fetched successfully');
-          console.log(glData);
+      //    console.log(glData);
         for (let j = 0; j < glData.length; j++) {
               glData[j].credit =0;
               glData[j].debit =0 ;
      glNo=glData[j].glNo ; //glData[0].glNo;
     glSub=glData[j].glSub; //glData[0].glSub ;
     opBalance = glData[j].opBalance;
-    console.log(glNo+' - '+glSub +': '+ "O/P Balance = "+opBalance);
+    //finBalance = glData[j].opBalance;
+    console.log('fist finBalance : '+finBalance);
 
 //*************************************** computing monthly trial balance ******
                       // Sum opcrAMt and drAmt in Jourm\nal file ****
 
-                      sql="SELECT SUM(drAmt-crAmt) AS sumBalance FROM journal where companyID='"+companyID+"' and glNo='"+glNo+"' and glSub='"+glSub+"' and txnDate<'"+startDate+"'";
+                      sql="SELECT SUM(crAmt-drAmt) AS sumBalance FROM journal where companyID='"+companyID+"' and glNo='"+glData[j].glNo+"' and glSub='"+glData[j].glSub+"' and txnDate<'"+startDate+"'";
                        console.log(sql);
 
                        con.query(sql, function (err, results, fields) {
@@ -79,28 +81,22 @@ router.get('/', function(req, res, next) {
                         }else{
 
                             if (results.length>0) {
-                                curBalance = opBalance+results[0].sumBalance;
-                                sumBalance=results[0].sumBalance;
+                                curBalance = glData[j].opBalance-results[0].sumBalance;
+                              //  sumBalance=results[0].sumBalance;
                                //  console.log("first Sumbalance: "+sumBalance);
                              } else {
-
-                                curBalance = opBalance;
-                                sumBalance = 0;
+                               curBalance = glData[j].opBalance;
                              }
-                               if (sumBalance === null) {
-                                   sumBalance =0;
+                               if (curBalance === null) {
+                                   curBalance =0;
                                }
-                              // sumBalance = opBalance+sumBalance;
-                              // sun console.log("Type: "+(typeof sumBalance));
-                              // opBalance = curBalance;
-                      //         console.log(glNo+' -'+glSub+"> sumBalance: "+sumBalance)
-                        //       console.log(glNo+' -'+glSub+"> opBalance: "+opBalance);
-
+                            //  finBalance+=curBalance;
                           }
+                          console.log('sumBalance = finBalance : '+finBalance);
                       });
 
                       // Load Journal Transaction record ****
-                      sql="SELECT * from journal where companyID = '"+companyID+"' and glNo='"+glNo+"' and glSub='"+glSub+"' and txnDate>='"+startDate+"' and txnDate<='"+ endDate +"' order by txnDate, voucherNo ASC";
+                      sql="SELECT sum(crAmt-drAmt) AS JnSumBal from journal where companyID = '"+companyID+"' and glNo='"+glData[j].glNo+"' and glSub='"+glData[j].glSub+"' and txnDate>='"+startDate+"' and txnDate<='"+ endDate +"'";
              //      panyID = '"+companyID+"' order by txnDate ASC";
 
                      console.log(sql);
@@ -111,50 +107,41 @@ router.get('/', function(req, res, next) {
                       // results(null,err);
                     //  res.send(alert('fail to load Journal record'));
                      }else{
-        if (results.length>0) {
+                        if (results.length>0) {
+                            sumBalance = results[0].JnSumBal;
 
-                      // results[0].opBal=opBalance+sumBalance;
-                      // results[0].curBal= (opBalance+sumBalance)+results[0].drAmt-results[0].crAmt;
-                      // curBalance =opBalance+sumBalance;  // results[0].curBal;
-                       drAmount=0;
-                       crAmount=0;
-                       debit=0;
-                       credit=0;
-                       for (let i = 0; i < results.length; i++) {
+                        }
+                           if (sumBalance === null) {
+                             sumBalance =0;
+                        }
 
-                            // results[i].curBal = curBalance+results[i].drAmt-results[i].crAmt;
-                            // curBalance = results[i].curBal;
-                             results[i].opBal = 0;
-                             drAmount+=results[i].drAmt;
-                             crAmount+=Math.abs(results[i].crAmt);
-                           // else { totalDebit+=res.data[x].debit;
+//if (glData[j].glType === '203') {
+  //  sumBalance=Math.abs(sumBalance)
+//  alert('glType = '+glData[j].glType+' / curBalance: '+curBalance+ ' = sumBalance: '+sumBalance);
+// }
 
-
-                            // console.log(glNo+' -'+glSub+" : "+curBalance);
-                          }
-                            finBalance=glData[j].opBalance+sumBalance+drAmount-crAmount;
-                            console.log('last curBalance: '+curBalance);
-                            if (finBalance > 0 ) {
-                                debit=finBalance;
-                                credit=0;
-                            } else {
-                              credit=finBalance;
-                              dedit=0;
-                            }
-                            glData[j].debit = debit;
-                            glData[j].credit=credit;
-                      //      console.log(glNo+' -'+glSub+'> debit: '+glData[j].debit+' == '+glData[j].credit);
-
-                      } else {  // if not found
-                         if (glData[j].opBalance > 0) {
-                           glData[j].debit = glData[j].opBalance;
-                            glData[j].credit =0;
-                         } else {
-                           glData[j].credit=glData[j].opBalance;
-                           glData[j].debit=0;
-                         }
+                     if ((curBalance-sumBalance) > 0) {
+                          if (glData[j].glType === '203') {
+                        //  glData[j].debit = (curBalance+sumBalance);
+                          } else {
+                        glData[j].debit = (curBalance-sumBalance);
                       }
-            } // if result
+                        glData[j].credit =0;
+                     } else {
+                    if (glData[j].glType === '203') {
+                    }else {
+                       glData[j].credit=(curBalance-sumBalance);
+                   }
+                       glData[j].debit=0;
+                     }
+    //  alert(glData[j].glType+' / debit: '+glData[j].debit+' / '+glData[j].credit);
+                   }
+                //     finBalance+=sumBalance;
+
+//  console.log('FnSumBal = finBalance : '+finBalance);
+
+
+
 
             if (j === glData.length -1) {
                 console.log(glData);

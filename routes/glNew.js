@@ -58,6 +58,30 @@ router.post('/', function(req, res, next) {
                   // check admin
               // insert into codesquaddb companyCTRL if not existed
 
+if (glType === '804') {
+
+  dbquery = "SElECT * FROM glAccount WHERE companyID='"+ companyID+ "' and glType='"+ glType+ "'";
+  console.log(dbquery);
+ con.query(dbquery, function(err, row) {
+
+         if (err) {
+           //console.log(err.message);
+           console.log(err);
+          // res.sendStatus(500);
+          // return;
+         } else {
+           if (row.length>0) {
+             con.end();
+            return(alert('Opening Balance allow only one G/L Account'))
+          }
+        }     // 2
+
+
+
+});
+}
+
+
 
            dbquery = "SElECT * FROM glAccount WHERE companyID='"+ companyID+ "' and glNo='"+ glNo +"' and glSub='"+ glSub +"'";
            console.log(dbquery);
