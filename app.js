@@ -140,7 +140,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(session({
   store: new MemoryStore({
         checkPeriod: 86400000 // prune expired entries every 24h
-      }),  
+      }),
   secret: "Our little secret.",
   resave: false,
   saveUninitialized: false,
@@ -969,15 +969,16 @@ app.post("/bankReconDelete", function(req, res, next) {
 
             //alert(result);
            console.log(err.message);
-
+          //  con.end();
            } else {
              if (row.length>0) {
 
                console.log(row[0].companyName);
                //alert("Login Success");
+            //   con.end();
                res.send(row[0].companyName);
              } else {
-
+              // con.end();
               // res.redirect("/");
                res.send("fail!!!");
              }
@@ -1267,8 +1268,9 @@ app.post("/bankReconDelete", function(req, res, next) {
 
            console.log('Generl Ledger fetched successfully');
           console.log(results);
+              //
                res.send(results);
-
+//db.end();
            //results(null,res);
         }
 
@@ -1323,6 +1325,7 @@ app.get("/glSelectList", function(req, res, next) {
                     var companyID = req.query.companyID;
                     var glType = req.query.gType;
                     var glType1 = req.query.gType1;
+                    var glType2 = req.query.glType2;
                     var db = mysql.createConnection({
                     host: process.env.DB_HOST,
                     user: process.env.DB_USER,
@@ -1336,7 +1339,7 @@ app.get("/glSelectList", function(req, res, next) {
                     console.log(process.env.DB_PASSWORD);
                     console.log(process.env.DB_NAME);
                     //console.log('req.body here -> ', categoryID);
-                    var sql="SELECT * from glAccount where companyID = '"+companyID+"' and (glType= '"+glType+"' OR glType = '"+glType1+"') order by glNo";
+                    var sql="SELECT * from glAccount where companyID = '"+companyID+"' and (glType= '"+glType+"' OR glType = '"+glType1+"' OR glType = '"+glType2+"') order by glNo";
                       // console.log(req.beforeDestroy() {
                      console.log(sql);
                       // },);
