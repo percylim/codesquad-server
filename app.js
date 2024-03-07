@@ -952,8 +952,8 @@ app.post("/bankReconDelete", function(req, res, next) {
      //  console.log(uservalidate);
     var con = mysql.createConnection({
       host: process.env.DB_HOST,
-      user: 'centralsoft',
-      password: 'F7eTo+zZ1c!9b*6e',
+      user: 'root',
+      password: 'PercyLlc@584597',
       database: 'codesquaddb',
       timezone : "+00:00",
     });
