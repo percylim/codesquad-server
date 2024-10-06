@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var alert = require('alert');
 var env = process.env;
-var mysql = require('mysql');
+var mysql = require('mysql2');
 //var db = require('./dbDatabase'); var md5 = require('md5');
 var qresult = "";
 var msg = "";
@@ -89,7 +89,7 @@ router.post('/', function(req, res, next) {
 
                    }
 
-      //     con.end();
+      //     stockCloseBal
         });
 
       });

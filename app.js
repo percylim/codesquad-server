@@ -10,7 +10,7 @@ var passport = require("passport");
 var logger = require("morgan");
 var cors = require("cors");
 var bodyParser = require("body-parser");
-var mysql = require("mysql");
+var mysql = require("mysql2");
 var LocalStrategy = require('passport-local').Strategy;
 var env = require('dotenv').config();
 var alert = require("alert");
@@ -952,8 +952,8 @@ app.post("/bankReconDelete", function(req, res, next) {
      //  console.log(uservalidate);
     var con = mysql.createConnection({
       host: process.env.DB_HOST,
-      user: 'centralsoft',
-      password: 'F7eTo+zZ1c!9b*6e',
+      user: 'root',
+      password: 'percy584597',
       database: 'codesquaddb',
       timezone : "+00:00",
     });
@@ -1408,8 +1408,8 @@ app.get("/glSelectList", function(req, res, next) {
          // server connection
         var con = mysql.createConnection({
           host: process.env.DB_HOST,
-          user: 'centralsoft',
-          password: 'F7eTo+zZ1c!9b*6e',
+          user: 'root',
+          password: 'percy584597',
           database: 'codesquaddb',
           timezone : "+00:00",
         });

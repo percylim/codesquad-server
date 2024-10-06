@@ -14,7 +14,8 @@
         "express": "^4.18.2",
         "fs": "^0.0.1-security",
         "memorystore": "^1.6.7",
-        "nodemon": "^2.0.20"
+        "mysql2": "3.11.3",
+        "nodemon": "3.1.7"
     },
     "devDependencies": {
         "alert": "^5.1.3",
@@ -22,7 +23,7 @@
         "cjs": "^0.0.11",
         "connect-flash": "^0.1.1",
         "cookie-parser": "^1.4.6",
-        "cors": "^2.8.5",
+        "cors": "2.8.5",
         "dotenv": "^16.3.1",
         "ejs": "^3.1.8",
         "express-session": "^1.17.3",
@@ -34,7 +35,7 @@
         "passport": "^0.6.0",
         "passport-local": "^1.0.0",
         "path": "^0.12.7",
-        "ws": "8.12.0"
+        "ws": "8.18.0"
     },
     "engines": {
         "node": ">=16.2.0",

@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var alert = require('alert');
 var env = process.env;
-var mysql = require('mysql');
+var mysql = require('mysql2');
 //var md5 = require('md5');
 //var db = require('./dbDatabase'); var md5 = require('md5');
 var qresult = "";
@@ -28,8 +28,12 @@ var con = mysql.createConnection({
   database: process.env.DB_NAME,
   timezone : "+00:00",
 });
+console.log(process.env.DB_HOST);
 con.connect(function(err) {
-      if (err) throw err;
+      if (err) {
+    console.error('Error connecting to the database:', err);
+    return;
+     }
       console.log("Connected!");
       });
       var sql="SELECT * from incomeTax where companyID='"+companyID+"' order by category";

@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var alert = require('alert');
 var env = process.env;
-var mysql = require('mysql');
+var mysql = require('mysql2');
 var qresult = "";
 var msg = "";
 var bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ router.post('/', function(req, res, next) {
     var glDescription = req.body.glDescription;
     var department = req.body.department;
     var opBalance = req.body.opBalance;
-    console.log("G/L Account: "+glNo);
+    console.log("############# G/L Account: "+glNo);
 
     var dbquery = ''
 
@@ -38,51 +38,27 @@ router.post('/', function(req, res, next) {
 
     con.connect(function(err) {
           if (err) throw err;
-          console.log("Connected!");
+          console.log("************ Connected!");
           });
 
-
-
-                  // ready to create new database and table
-                  // AAAA
-
-                  // check admin
-              // insert into codesquaddb companyCTRL if not existed
-
-
-           dbquery = "SElECT * FROM glAccount WHERE companyID='"+ companyID+ "' and glNo='"+ glNo +"' and glSub='"+ glSub +"'";
-           console.log(dbquery);
+        dbquery = "UPDATE glAccount SET glType='"+ glType +"', department='"+ department +"', glName='"+ glName +"', glDescription='"+ glDescription +"' where glNo='"+ glNo +"' and glSub='"+ glSub +"'";
+    console.log(dbquery);
           con.query(dbquery, function(err, row) {
 
                   if (err) {
-                    //console.log(err.message);
+
                     console.log(err);
-                   // res.sendStatus(500);
-                   // return;
+
                   } else {
-                    if (row.length===0) {   // 2
-                     console.log("General Ledger Account invalid");
-                     res.send(alert("General Ledger Account invalid, please re-entry"))
-                    } else  {   // create new record
-  dbquery = "UPDATE glAccount SET glType='"+ glType +"', department='"+ department +"', glName='"+ glName +"', glDescription='"+ glDescription +"' where glNo='"+ glNo +"' and glSub='"+ glSub +"'";
 
- console.log(dbquery);
-                          con.query(dbquery, function(err, row) {
 
-                          if (err) {
-                            //console.log(err.message);
-                            console.log(err);
-                            res.send(alert("general ledger update fail"));
-                           //res.sendStatus(500);
-                           // return;
-                           } else {
                             console.log("New G/L Account created")
                             res.send("Success");
-                           }
+                    }
 
-                       });
-                   } // 2
-                 }
+
+
+
                });
 
 
