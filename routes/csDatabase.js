@@ -5,7 +5,7 @@ var pool = mysql.createPool({
     connectionLimit : 10,
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
-    password: process.env.DB_PassIWRD,
+    password: process.env.DB_Password,
     database: process.env.DB_NAME,
     timezone : "+00:00",
 });

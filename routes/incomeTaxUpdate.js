@@ -32,6 +32,7 @@ console.log(process.env.DB_HOST);
 con.connect(function(err) {
       if (err) {
     console.error('Error connecting to the database:', err);
+    res.send(alert('Error connecting to the database:'+err));
     return;
      }
       console.log("Connected!");
@@ -43,6 +44,7 @@ con.connect(function(err) {
       con.query(sql, function (err, results, fields) {
        if(err){
          console.log('Error while fetching Income Tax Record'+ err);
+         res.send(alert('Error while fetching Income Tax Record'+ err));
          return;
         // results(null,err);
       //  res.send(alert('fail to load General Ledger record'));
