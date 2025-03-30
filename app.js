@@ -953,7 +953,7 @@ app.post("/bankReconDelete", function(req, res, next) {
     var con = mysql.createConnection({
       host: process.env.DB_HOST,
       user: 'root',
-      password: 'percy584597',
+      password: '584597',
       database: 'codesquaddb',
       timezone : "+00:00",
     });
