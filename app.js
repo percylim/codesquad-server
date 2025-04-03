@@ -126,10 +126,15 @@ app.use(bodyParser.urlencoded({
 //app.set("views", path.join(__dirname, "views"));
 //app.set("view engine", "ejs");
 
-app.use(cors());
+//app.use(cors());
 //app.use(cors({
 //  origin: '*'
 //}));
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your frontend port
+  credentials: true // If using cookies/auth
+
+}));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -1409,7 +1414,7 @@ app.get("/glSelectList", function(req, res, next) {
         var con = mysql.createConnection({
           host: process.env.DB_HOST,
           user: 'root',
-          password: 'percy584597',
+          password: '584597',
           database: 'codesquaddb',
           timezone : "+00:00",
         });
